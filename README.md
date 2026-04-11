@@ -88,14 +88,11 @@ flutter run
 
 ---
 
-## 📸 Screenshots
+## 🔮 Future Enhancements
 
-(Add screenshots here – e.g., splash screen, dashboard, encode/decode screens, feedback screen)  
-Example:
-
-<p align="center">
-  <img src="assets/image/SherlockCode.jpg" width="200" />
-</p>
+* Asymetric cryptography
+* Hash and MAC Algorithms
+* in-build chat section
 
 ---
 
