@@ -1,20 +1,75 @@
 import 'package:cipher_decoder/utils/import_export.dart';
 // ignore: must_be_immutable
 class DecodeView extends StatelessWidget {
-  DecodeController decodeController = DecodeController();
-  // EncodeDecodeOptionController encodeDecodeOptionController = Get.put(EncodeDecodeOptionController() , tag: TAG_DECODE);
-  EncodeDecodeOptionController encodeDecodeOptionController = EncodeDecodeOptionController();
   DecodeView({super.key});
 
+  final DecodeController decodeController = DecodeController();
+  final EncodeDecodeOptionController methodController = EncodeDecodeOptionController();
+  final String titleText = "Enter text to decode";
   @override
   Widget build(BuildContext context) {
-    return commonScreenLayout(
-      context: context,
-      controller: decodeController,
-      methodsController: encodeDecodeOptionController,
-      titleText: "Enter text to decode",
-      isEncoding: false,
-      isEncryption: false,
+    return Scaffold(
+      backgroundColor: cyberpunkDark,
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0A0A0A),
+                Color(0xFF1A1A2E),
+                cyberpunkDark,
+                Color(0xFF16213E),
+              ],
+              stops: [0.0, 0.3, 0.7, 1.0],
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
+
+                        // 🎯 INPUT CARD
+                        buildInputCard(decodeController, context, titleText,
+                            methodController, true),
+
+                        const SizedBox(height: 20),
+
+                        // 🎯 METHODS CARD
+                        buildMethodsCard(methodController, decodeController),
+
+                        const SizedBox(height: 20),
+
+                        // 🎯 OUTPUT CARD
+                        buildHorizontalOutputCard( decodeController, context,methodController, true),
+
+                        const SizedBox(height: 20),
+
+                        // 🎯 INFO CARD
+                        buildHorizontalInfoCard(methodController,context: context),
+
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

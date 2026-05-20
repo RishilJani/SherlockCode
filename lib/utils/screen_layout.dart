@@ -1,23 +1,95 @@
 import 'package:cipher_decoder/utils/import_export.dart';
 
-Widget commonScreenLayout({
-  required BuildContext context,
-  required controller,
-  required String titleText,
-  required methodsController,
-  bool isEncoding = true,
-  bool isEncryption = true,
-}) {
-  if (!checkAllTypes(controller: controller)) {
-    throw ControllerTypeException(
-        message: "Controller Type is not right at modernScreenLayout");
-  }
+// Widget commonScreenLayout({
+//   required BuildContext context,
+//   required controller,
+//   required String titleText,
+//   required methodsController,
+//   bool isEncoding = true,
+//   bool isEncryption = true,
+// }) {
+//   if (!checkAllTypes(controller: controller)) {
+//     throw ControllerTypeException(
+//         message: "Controller Type is not right at modernScreenLayout");
+//   }
+//
+//   if (methodsController is! EncodeDecodeOptionController &&
+//       methodsController is! EncryptionDecryptionOptionsController) {
+//     throw ControllerTypeException(
+//         message: "methodController Type is not right at modernScreenLayout");
+//   }
+//   return Scaffold(
+//     backgroundColor: cyberpunkDark,
+//     body: GestureDetector(
+//       behavior: HitTestBehavior.translucent,
+//       onTap: () => FocusScope.of(context).unfocus(),
+//       child: Container(
+//         width: double.infinity,
+//         height: double.infinity,
+//         decoration: const BoxDecoration(
+//           gradient: LinearGradient(
+//             begin: Alignment.topLeft,
+//             end: Alignment.bottomRight,
+//             colors: [
+//               Color(0xFF0A0A0A),
+//               Color(0xFF1A1A2E),
+//               cyberpunkDark,
+//               Color(0xFF16213E),
+//             ],
+//             stops: [0.0, 0.3, 0.7, 1.0],
+//           ),
+//         ),
+//         child: SafeArea(
+//           child: Column(
+//             children: [
+//               Expanded(
+//                 child: SingleChildScrollView(
+//                   physics: const BouncingScrollPhysics(),
+//                   padding: const EdgeInsets.symmetric(
+//                       horizontal: 16.0, vertical: 8.0),
+//                   child: Column(
+//                     children: [
+//                       const SizedBox(height: 10),
+//
+//                       // 🎯 INPUT CARD
+//                       buildInputCard(controller, context, titleText,
+//                           methodsController, isEncoding),
+//
+//                       const SizedBox(height: 20),
+//
+//                       // 🎯 METHODS CARD
+//                       buildMethodsCard(methodsController, controller),
+//
+//                       if (isEncryption) ...[
+//                         const SizedBox(height: 20),
+//                         buildHorizontalAddCard(controller, methodsController),
+//                       ],
+//
+//                       const SizedBox(height: 20),
+//
+//                       // 🎯 OUTPUT CARD
+//                       buildHorizontalOutputCard(
+//                           controller, context, methodsController, isEncoding),
+//
+//                       const SizedBox(height: 20),
+//
+//                       // 🎯 INFO CARD
+//                       buildHorizontalInfoCard(methodsController,context: context),
+//
+//                       const SizedBox(height: 32),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
-  if (methodsController is! EncodeDecodeOptionController &&
-      methodsController is! EncryptionDecryptionOptionsController) {
-    throw ControllerTypeException(
-        message: "methodController Type is not right at modernScreenLayout");
-  }
+Widget screenLayout(context, {required Widget child}) {
   return Scaffold(
     backgroundColor: cyberpunkDark,
     body: GestureDetector(
@@ -42,45 +114,12 @@ Widget commonScreenLayout({
         child: SafeArea(
           child: Column(
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
+              Expanded(child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 8.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10),
-
-                      // 🎯 INPUT CARD
-                      buildInputCard(controller, context, titleText,
-                          methodsController, isEncoding),
-
-                      const SizedBox(height: 20),
-
-                      // 🎯 METHODS CARD
-                      buildMethodsCard(methodsController, controller),
-
-                      if (isEncryption) ...[
-                        const SizedBox(height: 20),
-                        _buildHorizontalAddCard(controller, methodsController),
-                      ],
-
-                      const SizedBox(height: 20),
-
-                      // 🎯 OUTPUT CARD
-                      _buildHorizontalOutputCard(
-                          controller, context, methodsController, isEncoding),
-
-                      const SizedBox(height: 20),
-
-                      // 🎯 INFO CARD
-                      _buildHorizontalInfoCard(methodsController,context: context),
-
-                      const SizedBox(height: 32),
-                    ],
-                  ),
-                ),
-              ),
+                child: child
+              )),
             ],
           ),
         ),
@@ -134,7 +173,7 @@ Widget buildInputCard(
   );
 }
 
-// 🎯 HORIZONTAL METHODS CARD
+//  HORIZONTAL METHODS CARD
 Widget buildMethodsCard(methodsController, controller) {
   return Container(
     padding: const EdgeInsets.all(16),
@@ -229,8 +268,8 @@ Widget buildMethodsCard(methodsController, controller) {
   );
 }
 
-// 🎯 HORIZONTAL ADD CARD
-Widget _buildHorizontalAddCard(controller, methodsController) {
+// HORIZONTAL ADD CARD
+Widget buildHorizontalAddCard(controller, methodsController) {
   return Container(
     height: 44,
     decoration: BoxDecoration(
@@ -291,8 +330,8 @@ Widget _buildHorizontalAddCard(controller, methodsController) {
   );
 }
 
-// 🎯 HORIZONTAL OUTPUT CARD
-Widget _buildHorizontalOutputCard(
+// HORIZONTAL OUTPUT CARD
+Widget buildHorizontalOutputCard(
     controller, context, methodsController, bool isEncoding) {
   final textTitle = _getOutputTitle(controller);
   final hintText = "$textTitle...";
@@ -341,8 +380,8 @@ Widget _buildHorizontalOutputCard(
   );
 }
 
-// 🎯 HORIZONTAL INFO CARD
-Widget _buildHorizontalInfoCard(methodsController, {context}) {
+//  HORIZONTAL INFO CARD
+Widget buildHorizontalInfoCard(methodsController, {context}) {
   return Container(
     padding: const EdgeInsets.all(15),
     decoration: BoxDecoration(
@@ -441,7 +480,6 @@ Widget _buildHorizontalInfoCard(methodsController, {context}) {
     ),
   );
 }
-
 
 String _getOutputTitle(controller) {
   if (controller is EncryptionController) {

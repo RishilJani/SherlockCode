@@ -1,20 +1,44 @@
 import 'package:cipher_decoder/utils/import_export.dart';
-// ignore: must_be_immutable
+
 class EncryptionView extends StatelessWidget{
-  EncryptionController encryptionController = EncryptionController();
-  EncryptionDecryptionOptionsController encryptionDecryptionOptionsController = Get.put(EncryptionDecryptionOptionsController(),tag: TAG_ENCRYPT);
   EncryptionView({super.key});
 
+  final EncryptionController encryptionController = EncryptionController();
+  final EncryptionDecryptionOptionsController methodsController = Get.put(EncryptionDecryptionOptionsController(),tag: TAG_ENCRYPT);
+  final String titleText = "Enter Text to encrypt";
   @override
   Widget build(BuildContext context) {
-    return commonScreenLayout(
-      context: context,
-      controller: encryptionController,
-      methodsController: encryptionDecryptionOptionsController,
-      titleText: "Enter Text to encrypt",
-      isEncoding: true,
-      isEncryption: true,
-    );
+    return screenLayout(context, child: Column(
+      children: [
+        const SizedBox(height: 10),
+
+        // 🎯 INPUT CARD
+        buildInputCard(encryptionController, context, titleText,
+            methodsController, false),
+
+        const SizedBox(height: 20),
+
+        // 🎯 METHODS CARD
+        buildMethodsCard(methodsController, encryptionController),
+
+        const SizedBox(height: 20),
+        buildHorizontalAddCard(encryptionController, methodsController),
+
+
+        const SizedBox(height: 20),
+
+        // 🎯 OUTPUT CARD
+        buildHorizontalOutputCard(
+            encryptionController, context, methodsController, false),
+
+        const SizedBox(height: 20),
+
+        // 🎯 INFO CARD
+        buildHorizontalInfoCard(methodsController,context: context),
+
+        const SizedBox(height: 32),
+      ],
+    ));
   }
 
 }
