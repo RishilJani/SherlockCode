@@ -1,68 +1,66 @@
-import 'package:cipher_decoder/utils/import_export.dart';
 
-// Enhanced Cyberpunk color constants with additional shades
-const Color cyberpunkGreen = Color(0xFF00FF41);
-const Color cyberpunkCyan = Color(0xFF00FFFF);
-const Color cyberpunkPurple = Color(0xFF9D00FF);
-const Color cyberpunkRed = Color(0xFFFF0040);
-const Color cyberpunkDark = Color(0xFF0A0A0A);
-const Color cyberpunkDarkElevated = Color(0xFF1A0B2E);
-const Color cyberpunkLightElevated = Color(0x64482F7A);
+// Terminal Theme - Pure Black & White high-contrast palette
+import 'dart:ui';
 
-// Additional enhanced colors for better UI/UX
-const Color cyberpunkGreenLight = Color(0xFF00FF66);
-const Color cyberpunkGreenDark = Color(0xFF00CC33);
-const Color cyberpunkCyanLight = Color(0xFF33FFFF);
-const Color cyberpunkCyanDark = Color(0xFF00CCCC);
-const Color cyberpunkPurpleLight = Color(0xFFB366FF);
-const Color cyberpunkPurpleDark = Color(0xFF7A00CC);
-const Color cyberpunkLightRed = Color(0xFFFF5482);
-const Color cyberpunkRedLight = Color(0xFFFF3366);
-const Color cyberpunkRedDark = Color(0xFFCC0033);
+import 'package:flutter/material.dart';
 
-// Neutral colors for better contrast and readability
-const Color cyberpunkWhite = Color(0xFFFFFFFF);
-const Color cyberpunkGrayLight = Color(0xFFE0E0E0);
-const Color cyberpunkGray = Color(0xFFB0B0B0);
-const Color cyberpunkGrayDark = Color(0xFF707070);
-const Color cyberpunkBlack = Color(0xFF000000);
+const Color terminalWhite = Color(0xFFFFFFFF);
+const Color terminalLightGrey = Color(0xFFE0E0E0);
+const Color terminalGrey = Color(0xFFB0B0B0);
+const Color terminalMidGrey = Color(0xFF707070);
+const Color terminalDarkGrey = Color(0xFF404040);
+const Color terminalDarkerGrey = Color(0xFF202020);
+const Color terminalElevated = Color(0xFF101010);
+const Color terminalSurface = Color(0xFF000000); // Pure Black for surface
+const Color terminalBackground = Color(0xFF000000); // Pure Black background
+const Color terminalBlack = Color(0xFF000000);
 
+// Functional colors
+const Color terminalError = Color(0xFFFF3333);
+const Color terminalSuccess = Color(0xFFFFFFFF);
 
-// Gradient color combinations
-const List<Color> cyberpunkGreenGradient = [
-  cyberpunkGreen,
-  cyberpunkGreenLight,
-  cyberpunkCyan,
+// Glow effect variants
+const Color terminalGlow = Color(0x30FFFFFF);
+const List<BoxShadow> terminalHighContrastGlow = [
+  BoxShadow(
+    color: Color(0x20FFFFFF),
+    blurRadius: 10,
+    spreadRadius: 2,
+  )
 ];
 
-const List<Color> cyberpunkPurpleGradient = [
-  cyberpunkPurple,
-  cyberpunkPurpleLight,
-  cyberpunkCyan,
-];
+// Legacy aliases — kept for splash_screen.dart compatibility
+const Color cyberpunkGreen = terminalWhite;
+const Color cyberpunkCyan = terminalLightGrey;
+const Color cyberpunkPurple = terminalMidGrey;
+const Color cyberpunkRed = terminalError;
+const Color cyberpunkDark = terminalBackground;
+const Color cyberpunkDarkElevated = terminalSurface;
+const Color cyberpunkLightElevated = Color(0x30202020);
 
-const List<Color> cyberpunkCyanGradient = [
-  cyberpunkCyan,
-  cyberpunkCyanLight,
-  cyberpunkGreen,
-];
+const Color cyberpunkGreenLight = terminalLightGrey;
+const Color cyberpunkGreenDark = terminalGrey;
+const Color cyberpunkCyanLight = terminalLightGrey;
+const Color cyberpunkCyanDark = terminalDarkGrey;
+const Color cyberpunkPurpleLight = terminalGrey;
+const Color cyberpunkPurpleDark = terminalDarkGrey;
+const Color cyberpunkLightRed = terminalError;
+const Color cyberpunkRedLight = terminalError;
+const Color cyberpunkRedDark = Color(0xFFCC0000);
 
-const List<Color> cyberpunkRedGradient = [
-  cyberpunkRed,
-  cyberpunkRedLight,
-  cyberpunkPurple,
-];
+const Color cyberpunkWhite = terminalWhite;
+const Color cyberpunkGrayLight = terminalLightGrey;
+const Color cyberpunkGray = terminalGrey;
+const Color cyberpunkGrayDark = terminalDarkGrey;
+const Color cyberpunkBlack = terminalBlack;
 
-// Background gradient colors
-const List<Color> cyberpunkBackgroundGradient = [
-  cyberpunkDark,
-  cyberpunkDarkElevated,
-  Color(0xFF16213E),
-];
+// Monochrome gradients
+const List<Color> cyberpunkGreenGradient = [terminalWhite, terminalLightGrey];
+const List<Color> cyberpunkPurpleGradient = [terminalGrey, terminalMidGrey];
+const List<Color> cyberpunkCyanGradient = [terminalLightGrey, terminalWhite];
+const List<Color> cyberpunkRedGradient = [terminalError, terminalDarkGrey];
 
-const List<Color> cyberpunkSurfaceGradient = [
-  cyberpunkDarkElevated,
-  cyberpunkLightElevated,
-  cyberpunkDark,
-];
-var c = const Color(0xFF00F3F3);
+const List<Color> cyberpunkBackgroundGradient = [terminalBlack, terminalBlack];
+const List<Color> cyberpunkSurfaceGradient = [terminalBlack, terminalBlack];
+
+var c = const Color(0xFFFFFFFF);

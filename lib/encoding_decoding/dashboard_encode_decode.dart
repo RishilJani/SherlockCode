@@ -1,4 +1,9 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:flutter/material.dart';
+
+import '../utils/colors.dart';
+import '../utils/common_functions.dart';
+import 'decode/decode_view.dart';
+import 'encode/encode_view.dart';
 
 class DashboardEncodeDecode extends StatefulWidget {
   const DashboardEncodeDecode({super.key});
@@ -30,10 +35,9 @@ class _DashboardEncodeDecodeState extends State<DashboardEncodeDecode>
       child: Scaffold(
         backgroundColor: cyberpunkDark,
         appBar: buildEnhancedAppBar(
-          title: 'ENCODE / DECODE',
-          content: '> DATA TRANSFORMATION TERMINAL',
-          bottom: _buildEnhancedTabBar()
-        ),
+            title: 'ENCODE / DECODE',
+            content: '> DATA TRANSFORMATION TERMINAL',
+            bottom: _buildEnhancedTabBar()),
         body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -50,7 +54,7 @@ class _DashboardEncodeDecodeState extends State<DashboardEncodeDecode>
             controller: _tabController,
             children: [
               EncodeView(),
-               DecodeView(),
+              DecodeView(),
             ],
           ),
         ),

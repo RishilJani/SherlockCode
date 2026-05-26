@@ -1,4 +1,7 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+
+import 'package:flutter/material.dart';
+
+import '../encode_decode/encode_decode_model.dart';
 
 class EncodeController{
   TextEditingController plainTextController = TextEditingController();

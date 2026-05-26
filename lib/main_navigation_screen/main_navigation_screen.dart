@@ -1,4 +1,10 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../dashboard/dashboard.dart';
+import '../encrypt_decrypt/dashboard_encrypt_decrypt.dart';
+import '../utils/colors.dart';
+import '../utils/string_constants.dart';
+import 'main_navigation_screen_controller.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -18,7 +24,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     super.initState();
 
     navigationController
-        .setTabController(TabController(length: 3, vsync: this));
+        .setTabController(TabController(length: 2, vsync: this));
     navigationController.tabController.addListener(() {
       if (!navigationController.tabController.indexIsChanging &&
           navigationController.selectedIndex.value !=
@@ -32,29 +38,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   late List<Widget> pages = [
     _buildDashboardTab(),
     _buildEncryptDecryptTab(),
-    _buildEncodeDecodeTab(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: cyberpunkDark,
+      backgroundColor: terminalBlack,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              cyberpunkDark,
-              cyberpunkDarkElevated,
-              Color(0xFF16213E),
-            ],
-          ),
-        ),
+        color: terminalBlack,
         child: Obx(() {
           return Column(
             children: [
-              // Enhanced Header
+              // Enhanced Header with Glow
               AnimatedSize(
                 duration: const Duration(milliseconds: 350),
                 curve: Curves.easeInOut,
@@ -81,98 +76,74 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
   Widget _buildEnhancedHeader() {
     return Container(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: terminalWhite, width: 0.5)),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Main Title with Glow Effect
+          // Main Title with Glow
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  cyberpunkGreen.withValues(alpha: 0.15),
-                  cyberpunkCyan.withValues(alpha: 0.08),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(24),
+              color: terminalBlack,
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(
-                color: cyberpunkGreen.withValues(alpha: 0.4),
+                color: terminalWhite,
                 width: 1,
               ),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
-                  color: cyberpunkGreen.withValues(alpha: 0.3),
-                  blurRadius: 24,
-                  spreadRadius: 4,
-                  offset: const Offset(0, 8),
-                ),
+                  color: Color(0x30FFFFFF),
+                  blurRadius: 15,
+                  spreadRadius: 1,
+                )
               ],
             ),
-            child: ShaderMask(
-              shaderCallback: (bounds) => const LinearGradient(
-                colors: [cyberpunkGreen, cyberpunkCyan],
-              ).createShader(bounds),
-              child: const Text(
-                APPLICATION_NAME,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  fontFamily: 'monospace',
-                  letterSpacing: 2.0,
-                ),
+            child: const Text(
+              APPLICATION_NAME,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                color: terminalWhite,
+                fontFamily: 'monospace',
+                letterSpacing: 4.0,
               ),
             ),
           ),
-
         ],
       ),
     );
   }
 
-  //region Tabs
   Widget _buildDashboardTab() {
     return const Dashboard();
-  }
-
-  Widget _buildEncodeDecodeTab() {
-    return const DashboardEncodeDecode();
   }
 
   Widget _buildEncryptDecryptTab() {
     return const DashboardEncryptDecrypt();
   }
-  //endregion
 
   Widget _buildBottomNavigationBar() {
     return Container(
-      decoration: BoxDecoration(
-        color: cyberpunkDarkElevated,
+      decoration: const BoxDecoration(
+        color: terminalBlack,
         border: Border(
           top: BorderSide(
-            color: cyberpunkGreen.withValues(alpha: 0.3),
+            color: terminalWhite,
             width: 1,
           ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 20,
-            spreadRadius: 0,
-            offset: const Offset(0, -5),
-          ),
-        ],
       ),
       child: SafeArea(
         child: Obx(() {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                buildNavItem(0, Icons.dashboard, 'Dashboard'),
-                buildNavItem(1, Icons.lock, 'Encrypt/Decrypt'),
-                buildNavItem(2, Icons.transform, 'Encode/Decode'),
+                buildNavItem(0, Icons.dashboard, 'DASHBOARD'),
+                buildNavItem(1, Icons.lock, 'CRYPTO'),
               ],
             ),
           );
@@ -190,36 +161,39 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? cyberpunkGreen.withValues(alpha: 0.2)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          color: isSelected ? terminalWhite : terminalBlack,
+          borderRadius: BorderRadius.circular(4),
           border: Border.all(
-            color: isSelected
-                ? cyberpunkGreen.withValues(alpha: 0.5)
-                : Colors.transparent,
+            color: terminalWhite,
             width: 1,
           ),
+          boxShadow: isSelected ? [
+            const BoxShadow(
+              color: Color(0x50FFFFFF),
+              blurRadius: 10,
+              spreadRadius: 0,
+            )
+          ] : null,
         ),
-        child: Column(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              color: isSelected ? cyberpunkGreen : Colors.grey[400],
-              size: 24,
+              color: isSelected ? terminalBlack : terminalWhite,
+              size: 20,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
-                fontSize: 10,
-                color: isSelected ? cyberpunkGreen : Colors.grey[400],
+                fontSize: 12,
+                color: isSelected ? terminalBlack : terminalWhite,
                 fontFamily: 'monospace',
-                overflow: TextOverflow.clip,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1,
               ),
             ),
           ],

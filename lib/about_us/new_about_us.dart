@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../utils/import_export.dart';
+import '../utils/colors.dart';
+import '../utils/common_functions.dart';
+import '../utils/string_constants.dart';
 
 class NewAboutUs extends StatelessWidget {
   const NewAboutUs({super.key});
@@ -9,184 +12,89 @@ class NewAboutUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: cyberpunkDark,
-      appBar: AppBar(
-        backgroundColor: cyberpunkCyanDark,
-        title: const Text(
-          "About Us",
-          style: TextStyle(color: Colors.white),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
+      backgroundColor: terminalBlack,
+      appBar: buildEnhancedAppBar(
+        title: "ABOUT_US",
+        content: "ASWDC_CORE_SYSTEM_INFO"
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Center(
-              child: ClipOval(
-                child: Image.asset(
-                  APP_LOGO_PATH,
-                  height: 120,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: terminalWhite, width: 2),
+                ),
+                child: ClipOval(
+                  child: ColorFiltered(
+                    colorFilter: const ColorFilter.matrix([
+                      0.2126, 0.7152, 0.0722, 0, 0,
+                      0.2126, 0.7152, 0.0722, 0, 0,
+                      0.2126, 0.7152, 0.0722, 0, 0,
+                      0,      0,      0,      1, 0,
+                    ]), // Grayscale logo
+                    child: Image.asset(APP_LOGO_PATH, height: 100),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            _AboutCard(
-              color: cyberpunkGreen,
-              text: "Meet Our Team",
+            const SizedBox(height: 24),
+            const _AboutCard(
+              text: "SYSTEM_ROSTER",
               child: Padding(
-                padding: const EdgeInsets.all(7),
+                padding: EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    _AboutCardRow(
-                      text: "Rishil V. Jani",
-                      tittleText: "Developed By",
-                      colorValue: cyberpunkGreen,
-                    ),
-                    _AboutCardRow(
-                      text: "Prof. Mehul Bhundiya",
-                      tittleText: "Mentored By",
-                      colorValue: cyberpunkGreen,
-                    ),
-                    _AboutCardRow(
-                      text: "ASWDC",
-                      tittleText: "Explored By",
-                      colorValue: cyberpunkGreen,
-                    ),
-                    _AboutCardRow(
-                      text: "Darshan University, Rajkot",
-                      tittleText: "Eulogized By",
-                      colorValue: cyberpunkGreen,
-                    ),
+                    _AboutCardRow(text: "RISHIL JANI", tittleText: "DEVELOPER"),
+                    _AboutCardRow(text: "PROF MEHUL BHUNDIYA", tittleText: "MENTOR"),
+                    _AboutCardRow(text: "ASWDC", tittleText: "PROTOCOL"),
+                    _AboutCardRow(text: "DARSHAN UNIVERSITY", tittleText: "STATION"),
                   ],
                 ),
               ),
             ),
             _AboutCard(
-                text: "About Us", child: infoCard(), color: cyberpunkGreen),
+              text: "SYSTEM_LOGS",
+              child: infoCard(),
+            ),
             _AboutCard(
-              text: "Contact Us",
-              color: cyberpunkGreen,
+              text: "COMMS_CHANNEL",
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    _CardRow(
-                      icon: Icons.mail,
-                      text: "aswdc@darshan.ac.in",
-                      colorValue: cyberpunkGreen,
-                      textColor: cyberpunkWhite,
-                      onTap: () {
-                        _launchURL("mailto:aswdc@darshan.ac.in");
-                      },
-                    ),
-                    _CardRow(
-                      icon: Icons.phone,
-                      text: "+91-97277 47317",
-                      colorValue: cyberpunkGreen,
-                      textColor: cyberpunkWhite,
-                      onTap: () {
-                        _launchURL("tel:+919727747317");
-                      },
-                    ),
-                    _CardRow(
-                      icon: Icons.web,
-                      text: "darshan.ac.in",
-                      colorValue: cyberpunkGreen,
-                      textColor: cyberpunkWhite,
-                      onTap: () {
-                        _launchURL("https://darshan.ac.in");
-                      },
-                    ),
+                    _CardRow(icon: Icons.mail, text: "aswdc@darshan.ac.in", onTap: () => _launchURL("mailto:aswdc@darshan.ac.in")),
+                    _CardRow(icon: Icons.phone, text: "+91-97277 47317", onTap: () => _launchURL("tel:+919727747317")),
+                    _CardRow(icon: Icons.web, text: "darshan.ac.in", onTap: () => _launchURL("https://darshan.ac.in")),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Card(
-                elevation: 2,
-                color: cyberpunkDarkElevated,
-                shape: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide:
-                        const BorderSide(color: cyberpunkGreen, width: 1.5)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      _CardRow(
-                        icon: Icons.share,
-                        text: "Share App",
-                        colorValue: cyberpunkGreen,
-                        textColor: cyberpunkWhite,
-                        onTap: () {
-                          // Share.share(SHARE_APP_MESSAGE);
-                          SharePlus.instance.share(ShareParams(
-                              text: "$SHARE_APP_MESSAGE \n$DU_URL",
-
-                          ));
-                        },
-                      ),
-                      _CardRow(
-                        icon: Icons.apps,
-                        text: "More Apps",
-                        colorValue: cyberpunkGreen,
-                        textColor: cyberpunkWhite,
-                        onTap: () {
-                          _launchURL(
-                              "https://play.google.com/store/apps/developer?id=Darshan+University");
-                        },
-                      ),
-                      _CardRow(
-                        icon: Icons.star,
-                        text: "Rate Us",
-                        colorValue: cyberpunkGreen,
-                        textColor: cyberpunkWhite,
-                        onTap: () {
-                          _launchURL(ANDROID_APP_URL);
-                        },
-                      ),
-                    ],
-                  ),
+            _AboutCard(
+              text: "UTILITIES",
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    _CardRow(icon: Icons.share, text: "SHARE_STATION", onTap: () => SharePlus.instance.share(ShareParams(text: "$SHARE_APP_MESSAGE \n$DU_URL"))),
+                    _CardRow(icon: Icons.apps, text: "MORE_TERMINALS", onTap: () => _launchURL("https://play.google.com/store/apps/developer?id=Darshan+University")),
+                    _CardRow(icon: Icons.star, text: "RATE_PROTOCOL", onTap: () => _launchURL(ANDROID_APP_URL)),
+                  ],
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 15, bottom: 15),
-              child: Column(
-                children: [
-                  const Text(
-                    "© 2024 Darshan University",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: cyberpunkGray),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "All Rights Reserved -",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: cyberpunkGray),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          _launchURL(
-                              "https://darshan.ac.in/aswdc-privacy-policy-general");
-                        },
-                        child: const Text(" Privacy Policy",
-                            style: TextStyle(color: Colors.blueAccent)),
-                      )
-                    ],
-                  ),
-                  const Text(
-                    "Made with ❤ in India",
-                    style: TextStyle(color: cyberpunkGray),
-                  )
-                ],
-              ),
-            )
+            const SizedBox(height: 32),
+            const Column(
+              children: [
+                Text("DARSHAN_UNIVERSITY_SYSTEMS_2024", style: TextStyle(color: terminalGrey, fontSize: 10)),
+                SizedBox(height: 8),
+                Text("MADE_WITH_PRECISION_IN_INDIA", style: TextStyle(color: terminalGrey, fontSize: 10)),
+              ],
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -195,92 +103,47 @@ class NewAboutUs extends StatelessWidget {
 
   void _launchURL(String url) async {
     final uri = Uri.parse(url);
-    if (!await launchUrl(uri)) {
-      throw 'Could not launch $url';
-    }
+    if (!await launchUrl(uri)) throw 'Could not launch $url';
   }
 }
 
 Widget infoCard() {
-  return Padding(
-    padding: const EdgeInsets.all(8),
-    child: Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Image.asset(
-                DU_LOGO_PATH,
-                height: 65,
-              ),
-              Image.asset(
-                ASWDC_LOGO_PATH,
-                height: 65,
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "ASWDC is Application, Software and Website Development Center @ Darshan University run by Students and Staff of School Of Computer Science.\n\nSole purpose of ASWDC is to bridge gap between university curriculum &amp; industry demands. Students learn cutting edge technologies, develop real world application & experiences professional environment @ ASWDC under guidance of industry experts & faculty members.",
-            style: TextStyle(
-              fontSize: 15.0,
-              color: cyberpunkWhite,
-            ),
-          ),
-        ),
-      ],
+  return const Padding(
+    padding: EdgeInsets.all(16),
+    child: Text(
+      "ASWDC IS THE ARCHITECTURAL CORE FOR SOFTWARE DEVELOPMENT @ DARSHAN UNIVERSITY. OUR PROTOCOLS ENSURE THE HIGHEST STANDARDS OF CRYPTOGRAPHIC EXCELLENCE AND SYSTEM INTEGRITY.",
+      style: TextStyle(fontSize: 12.0, color: terminalWhite, fontFamily: 'monospace', height: 1.6),
+      textAlign: TextAlign.justify,
     ),
   );
 }
 
 class _AboutCard extends StatelessWidget {
-  const _AboutCard({
-    required this.text,
-    required this.child,
-    required this.color,
-  });
-
+  const _AboutCard({required this.text, required this.child});
   final String text;
   final Widget child;
-  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      topRight: Radius.circular(4))),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 5, top: 5, right: 15, left: 15),
-                child: Text(text,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold)),
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: const BoxDecoration(
+              color: terminalWhite,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
             ),
+            child: Text(text, style: const TextStyle(color: terminalBlack, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
           ),
-          Card(
-            elevation: 2,
-            color: cyberpunkDarkElevated,
-            margin: EdgeInsets.zero,
-            shape: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide(color: color, width: 1.5)),
+          Container(
+            decoration: BoxDecoration(
+              color: terminalBlack,
+              border: Border.all(color: terminalWhite, width: 1),
+              borderRadius: const BorderRadius.only(topRight: Radius.circular(4), bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
+            ),
             child: child,
           )
         ],
@@ -290,46 +153,20 @@ class _AboutCard extends StatelessWidget {
 }
 
 class _AboutCardRow extends StatelessWidget {
-  const _AboutCardRow({
-    required this.text,
-    required this.tittleText,
-    required this.colorValue,
-  });
-
+  const _AboutCardRow({required this.text, required this.tittleText});
   final String text;
   final String tittleText;
-  final Color colorValue;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(1.5),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 95,
-            child: Text(
-              tittleText,
-              style: TextStyle(
-                color: colorValue,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: Text(
-              ":",
-              style: TextStyle(color: colorValue),
-            ),
-          ),
-          Flexible(
-              child: Text(
-            text,
-            style: const TextStyle(
-              color: cyberpunkWhite,
-            ),
-          ))
+          SizedBox(width: 90, child: Text(tittleText, style: const TextStyle(color: terminalGrey, fontSize: 11, fontWeight: FontWeight.bold))),
+          const Text(" :: ", style: TextStyle(color: terminalWhite)),
+          Flexible(child: Text(text, style: const TextStyle(color: terminalWhite, fontSize: 11, fontWeight: FontWeight.w900))),
         ],
       ),
     );
@@ -337,48 +174,24 @@ class _AboutCardRow extends StatelessWidget {
 }
 
 class _CardRow extends StatelessWidget {
-  const _CardRow({
-    required this.icon,
-    required this.text,
-    required this.onTap,
-    required this.textColor,
-    required this.colorValue,
-  });
-
+  const _CardRow({required this.icon, required this.text, required this.onTap});
   final IconData icon;
   final String text;
   final VoidCallback onTap;
-  final Color colorValue;
-  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 1),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 6.0),
-            child: Icon(
-              icon,
-              size: 20,
-              color: colorValue,
-            ),
-          ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: InkWell(
-                onTap: onTap,
-                child: Text(
-                  text,
-                  style: TextStyle(fontSize: 15, color: textColor),
-                ),
-              ),
-            ),
-          )
-        ],
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: terminalWhite),
+            const SizedBox(width: 12),
+            Text(text.toUpperCase(), style: const TextStyle(fontSize: 12, color: terminalWhite, fontWeight: FontWeight.w400)),
+          ],
+        ),
       ),
     );
   }

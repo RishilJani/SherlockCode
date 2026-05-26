@@ -1,4 +1,7 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
+
+import '../../utils/string_constants.dart';
 
 abstract class EncryptionDecryptionModel {
   String? title;

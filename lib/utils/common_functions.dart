@@ -1,4 +1,18 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:cipher_decoder/utils/string_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import '../encoding_decoding/decode/decode_controller.dart';
+import '../encoding_decoding/encode/encode_controller.dart';
+import '../encoding_decoding/encode_decode/encode_decode_model.dart';
+import '../encoding_decoding/encode_decode/encode_decode_model.dart';
+import '../encoding_decoding/encode_decode/encode_decode_option_controller.dart';
+import '../encrypt_decrypt/decryption/decryption_controller.dart';
+import '../encrypt_decrypt/encryption/encryption_controller.dart';
+import '../encrypt_decrypt/encryption_decryption/encryption_decryption_model.dart';
+import '../encrypt_decrypt/encryption_decryption/encryption_decryption_options_controller.dart';
+import 'colors.dart';
+import 'custom_exceptions.dart';
 
 Widget myInputfield(
     {key,
@@ -18,77 +32,47 @@ Widget myInputfield(
     bool isEncode = true,
     bool isPlain = true,
     methodController}) {
-  if (!checkAllTypes(controller: controller) &&
-      controller is! TextEditingController) {
-    throw ControllerTypeException(
-        message: "Controller is Not right ::: ${controller.runtimeType}");
-  }
-
   TextEditingController ctr;
   if (isPlain) {
-    if (key != null) {
-      ctr = controller;
-    } else {
-      ctr = controller.plainTextController;
-    }
+    ctr = key != null ? controller : controller.plainTextController;
   } else {
     ctr = controller.cipherTextController;
   }
 
   return Container(
     key: key,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: readonly
-              ? cyberpunkPurple.withValues(alpha: 0.15)
-              : cyberpunkCyan.withValues(alpha: 0.15),
-          blurRadius: 16,
-          spreadRadius: 2,
-          offset: const Offset(0, 4),
-        ),
-      ],
+    decoration: const BoxDecoration(
+      color: terminalBlack,
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Header bar for the input field
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                cyberpunkCyan.withValues(alpha: 0.2),
-                cyberpunkCyan.withValues(alpha: 0.1),
-              ],
-            ),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-            border: Border.all(
-              color: readonly
-                  ? cyberpunkPurple.withValues(alpha: 0.3)
-                  : cyberpunkCyan.withValues(alpha: 0.3),
-              width: 1,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: const BoxDecoration(
+            color: terminalWhite,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(4),
+              topRight: Radius.circular(4),
             ),
           ),
           child: Row(
             children: [
               Icon(
                 readonly ? Icons.output : Icons.input,
-                size: 16,
-                color: cyberpunkCyan,
+                size: 14,
+                color: terminalBlack,
               ),
               const SizedBox(width: 8),
               Text(
-                textTitle,
+                textTitle.toUpperCase(),
                 style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: cyberpunkCyan,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  color: terminalBlack,
                   fontFamily: 'monospace',
-                  letterSpacing: 1.0,
+                  letterSpacing: 1.5,
                 ),
               ),
             ],
@@ -98,45 +82,36 @@ Widget myInputfield(
           readOnly: readonly,
           controller: ctr,
           decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-              color: cyberpunkGreen.withValues(alpha: 0.4),
+            hintText: hintText?.toUpperCase(),
+            hintStyle: const TextStyle(
+              color: terminalMidGrey,
               fontFamily: 'monospace',
-              fontSize: 14,
+              fontSize: 12,
             ),
-            border: OutlineInputBorder(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(16),
-                bottomRight: Radius.circular(16),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(4),
+                bottomRight: Radius.circular(4),
               ),
-              borderSide: BorderSide(
-                color: cyberpunkCyan.withValues(alpha: 0.3),
-                width: 1,
-              ),
+              borderSide: BorderSide(color: terminalWhite, width: 1),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(16),
-                bottomRight: Radius.circular(16),
+            enabledBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(4),
+                bottomRight: Radius.circular(4),
               ),
-              borderSide: BorderSide(
-                color: cyberpunkCyan.withValues(alpha: 0.3),
-                width: 1,
-              ),
+              borderSide: BorderSide(color: terminalWhite, width: 1),
             ),
             focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(16),
-                bottomRight: Radius.circular(16),
+                bottomLeft: Radius.circular(4),
+                bottomRight: Radius.circular(4),
               ),
-              borderSide: BorderSide(
-                color: cyberpunkCyan,
-                width: 2,
-              ),
+              borderSide: BorderSide(color: terminalWhite, width: 2),
             ),
             filled: true,
-            fillColor: cyberpunkLightElevated,
-            contentPadding: const EdgeInsets.all(20),
+            fillColor: terminalBlack,
+            contentPadding: const EdgeInsets.all(16),
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -151,16 +126,15 @@ Widget myInputfield(
             ),
           ),
           style: const TextStyle(
-            color: cyberpunkCyan,
+            color: terminalWhite,
             fontFamily: 'monospace',
             fontSize: 14,
             height: 1.4,
+            letterSpacing: 0.5,
           ),
           minLines: minLines,
           maxLines: maxLines,
           keyboardType: keyboardType,
-          enableSuggestions: true,
-          enableInteractiveSelection: true,
           textInputAction: textInputAction,
           onChanged: onChanged,
           validator: validator,
@@ -171,59 +145,32 @@ Widget myInputfield(
   );
 }
 
-dynamic getMethod({required element}) {
-  if (element is EncryptionDecryptionTypes) {
-    if (element == EncryptionDecryptionTypes.CeaseCipher) {
-      return new CeaseCipher();
-    } else if (element == EncryptionDecryptionTypes.Atbash_Cipher) {
-      return new AtbashCipher();
-    }
-    else if (element == EncryptionDecryptionTypes.Rail_Fence_Cipher) {
-      return new RailFenceCipher();
-    }else if(element == EncryptionDecryptionTypes.Play_Fair_Cipher){
-      return new PlayFairCipher();
-    }
-  } else if (element is EncodeDecodeTypes) {
-    if (element == EncodeDecodeTypes.Base64) {
-      return Base64();
-    }
-    if (element == EncodeDecodeTypes.Base32) {
-      return Base32();
-    }
-  } else {
-    throw ControllerTypeException(
-        message: "encrypt decrypt element is not right ${element.runtimeType}");
-  }
-}
-
-// region Description
+// region Descriptions
 Widget description({required context, controller}) {
   if (controller is EncodeController || controller is DecodeController) {
-    return const SizedBox(
-      height: 0,
-    );
+    return const SizedBox.shrink();
   }
   return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _getDescriptionList(controller: controller, context: context),
-
-        // character mapping for encryption decryption
         Visibility(
           visible: controller.desc.value != '',
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.only(top: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: terminalWhite, width: 0.5),
+            ),
             child: Text(
-              controller.desc.value,
+              controller.desc.value.toUpperCase(),
               style: const TextStyle(
-                fontSize: 13,
-                color: Color(0xFF00FFFF),
+                fontSize: 11,
+                color: terminalWhite,
                 fontFamily: 'monospace',
                 height: 1.4,
-                letterSpacing: 0.3,
               ),
             ),
           ),
@@ -233,7 +180,6 @@ Widget description({required context, controller}) {
   );
 }
 
-// to write multiple descriptions for encryption decryption
 Widget _getDescriptionList({controller, context}) {
   List<String> temp = [];
   return ListView.builder(
@@ -243,23 +189,24 @@ Widget _getDescriptionList({controller, context}) {
         : 1,
     physics: const NeverScrollableScrollPhysics(),
     itemBuilder: (context, index) {
-      bool isCame = false;
       String txt1;
       String description = "";
+      bool isCame = false;
+
       if (controller is EncodeDecodeOptionController) {
         txt1 = controller.selectedMethod.value.title!.toUpperCase();
-        if (temp.contains(txt1)) {
+        if (temp.contains(txt1))
           isCame = true;
-        } else {
+        else {
           temp.add(txt1);
           description = controller.selectedMethod.value.description!;
         }
       } else {
         String name = controller.options[index].title!.toUpperCase();
         txt1 = '${index + 1}. $name';
-        if (temp.contains(name)) {
+        if (temp.contains(name))
           isCame = true;
-        } else {
+        else {
           temp.add(name);
           description = controller.options[index].description!;
         }
@@ -272,85 +219,37 @@ Widget _getDescriptionList({controller, context}) {
           children: [
             Row(
               children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF00FF41),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF00FF41).withValues(alpha: 0.6),
-                        blurRadius: 6,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                ),
+                const Icon(Icons.keyboard_arrow_right,
+                    color: terminalWhite, size: 16),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     txt1,
                     style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF00FF41),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w900,
+                      color: terminalWhite,
                       fontFamily: 'monospace',
                       letterSpacing: 1,
                     ),
                   ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color(0xFF00FF41).withValues(alpha: 0.5),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(3),
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFF00FF41).withValues(alpha: 0.1),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                  child: const Text(
-                    'ACTIVE',
-                    style: TextStyle(
-                      fontSize: 8,
-                      color: Color(0xFF00FF41),
-                      fontFamily: 'monospace',
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
               ],
             ),
-
-            const SizedBox(height: 12),
-
-            // Description with terminal-style divider
+            const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.only(left: 20),
-              margin: const EdgeInsets.only(bottom: 10),
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: const Color(0xFF00FFFF).withValues(alpha: 0.3),
-                    width: 2,
-                  ),
-                ),
+              padding: const EdgeInsets.only(left: 12, top: 4, bottom: 12),
+              decoration: const BoxDecoration(
+                border:
+                    Border(left: BorderSide(color: terminalWhite, width: 1)),
               ),
               child: Text(
-                description,
+                description.toUpperCase(),
                 style: const TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF00FFFF),
+                  fontSize: 11,
+                  color: terminalGrey,
                   fontFamily: 'monospace',
-                  height: 1.5,
-                  letterSpacing: 0.2,
+                  height: 1.4,
                 ),
               ),
             ),
@@ -360,8 +259,149 @@ Widget _getDescriptionList({controller, context}) {
     },
   );
 }
+// endregion
 
-String dynamicDescription({controller, String? text1, String? text2}) {
+PreferredSizeWidget buildEnhancedAppBar({title, content, bottom}) {
+  return AppBar(
+    title: Column(
+      children: [
+        Text(
+          title.toUpperCase(),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w900,
+            color: terminalWhite,
+            fontFamily: 'monospace',
+            letterSpacing: 4.0,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: terminalWhite,
+            borderRadius: BorderRadius.circular(2),
+          ),
+          child: Text(
+            content.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 10,
+              color: terminalBlack,
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+      ],
+    ),
+    centerTitle: true,
+    backgroundColor: terminalBlack,
+    elevation: 0,
+    bottom: bottom,
+  );
+}
+
+Widget _customIconButton({Color? color, onTap, IconData, double? size}) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: terminalBlack,
+        border: Border.all(color: color ?? terminalWhite, width: 1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Icon(IconData, color: color ?? terminalWhite, size: size ?? 20.0),
+    ),
+  );
+}
+
+Widget enhancedClearIconButton(
+    {required controller, required encryptionDecryptionOptionsController}) {
+  return _customIconButton(
+      color: terminalError,
+      IconData: Icons.clear,
+      onTap: () {
+        controller.plainTextController.clear();
+        controller.cipherTextController.clear();
+        encryptionDecryptionOptionsController.onChange(controller: controller);
+      });
+}
+
+Widget buildMobilePasteButton({controller, onChange}) {
+  return _customIconButton(
+      IconData: Icons.paste,
+      onTap: () {
+        pasteText(controller: controller, onChange: onChange);
+      });
+}
+
+Widget buildMobileCopyButton(controller, bool isEncoding) {
+  return _customIconButton(
+      onTap: () {
+        String cpy = isEncoding
+            ? controller.cipherTextController.text.toString()
+            : controller.plainTextController.text.toString();
+        copyText(cpy);
+      },
+      IconData: Icons.copy);
+}
+
+void copyText(String txt) {
+  if (txt.isEmpty) {
+    showSnackBar(
+        title: "EMPTY FIELD",
+        message: "NO DATA TO COPY.",
+        backgroundColor: terminalWhite,
+        colorText: terminalBlack);
+  } else {
+    Clipboard.setData(ClipboardData(text: txt)).then((value) {
+      showSnackBar(
+          title: "SUCCESS",
+          message: "DATA COPIED TO BUFFER.",
+          backgroundColor: terminalWhite,
+          colorText: terminalBlack);
+    });
+  }
+}
+
+void showSnackBar({title, message, backgroundColor, colorText}) {
+  Get.snackbar(
+    title,
+    message,
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: backgroundColor,
+    colorText: colorText,
+    borderRadius: 4,
+    margin: const EdgeInsets.all(16),
+    duration: const Duration(seconds: 3),
+    borderWidth: 1,
+    borderColor: terminalBlack,
+  );
+}
+
+// rest of the helpers remain essentially the same but with monospace defaults from theme
+bool checkAllTypes({controller}) =>
+    controller is EncryptionController ||
+    controller is DecryptionController ||
+    controller is EncodeController ||
+    controller is DecodeController;
+
+void pasteText({controller, required Function onChange}) async {
+  ClipboardData? data = await Clipboard.getData('text/plain');
+  if (data != null) {
+    if (controller is EncodeController || controller is EncryptionController)
+      controller.plainTextController.text = data.text!;
+    else if (controller is DecodeController ||
+        controller is DecryptionController)
+      controller.cipherTextController.text = data.text!;
+    onChange(controller: controller);
+  }
+}
+
+String dynamicDescription({controller, String text1 = '', String text2 = ''}) {
   if (controller is EncryptionController) {
     text1 ??= controller.plainTextController.text;
     text2 ??= controller.cipherTextController.text;
@@ -400,230 +440,26 @@ String dynamicDescription({controller, String? text1, String? text2}) {
   return ans;
 }
 
-// endregion
-
-// region IconButtons
-
-//region CustomIconButton
-Decoration? iconDecoration({required Color borderColor}) {
-  return BoxDecoration(
-    border: Border.all(color: borderColor.withValues(alpha: 0.4), width: 1),
-    borderRadius: BorderRadius.circular(8),
-    gradient: LinearGradient(
-      colors: [
-        borderColor.withValues(alpha: 0.2),
-        borderColor.withValues(alpha: 0.1),
-      ],
-    ),
-  );
-}
-
-Widget _customIconButton({Color? color, onTap, IconData , double? size}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
-    margin: const EdgeInsets.only(left: 5, right: 10),
-    decoration: iconDecoration(borderColor: color!),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(6),
-      child: Icon(IconData, color: color, size: size ?? 22.0),
-    ),
-  );
-}
-//endregion
-
-// region CLEAR BUTTON
-Widget enhancedClearIconButton({
-  required controller,
-  required encryptionDecryptionOptionsController,
-}) {
-  return _customIconButton(
-      color: cyberpunkRed,
-      IconData: Icons.clear,
-      onTap: () {
-        controller.plainTextController.clear();
-        controller.cipherTextController.clear();
-        encryptionDecryptionOptionsController.onChange(controller: controller);
-      });
-}
-// endregion
-
-// region PASTE BUTTON
-Widget buildMobilePasteButton({controller, onChange}) {
-  return _customIconButton(
-      color: cyberpunkCyan,
-      IconData: Icons.paste,
-      onTap: () {
-        pasteText(controller: controller, onChange: onChange);
-      });
-}
-
-// to paste text from clipboard
-void pasteText({controller, required Function onChange}) async {
-  ClipboardData? data = await Clipboard.getData('text/plain');
-  if (data != null) {
-    if (controller is EncodeController || controller is EncryptionController) {
-      controller.plainTextController.text = data.text!;
-    } else if (controller is DecodeController ||
-        controller is DecryptionController) {
-      controller.cipherTextController.text = data.text!;
-    } else {
-      throw ControllerTypeException(
-          message:
-              "Controller is not right in pasteText ${controller.runtimeType}");
+dynamic getMethod({required element}) {
+  if (element is EncryptionDecryptionTypes) {
+    if (element == EncryptionDecryptionTypes.CeaseCipher) {
+      return new CeaseCipher();
+    } else if (element == EncryptionDecryptionTypes.Atbash_Cipher) {
+      return new AtbashCipher();
+    } else if (element == EncryptionDecryptionTypes.Rail_Fence_Cipher) {
+      return new RailFenceCipher();
+    } else if (element == EncryptionDecryptionTypes.Play_Fair_Cipher) {
+      return new PlayFairCipher();
     }
-    onChange(controller: controller);
-  }
-}
-
-// endregion
-
-// region COPY BUTTON
-Widget buildMobileCopyButton(controller, bool isEncoding) {
-  return _customIconButton(
-      color: cyberpunkPurple,
-      onTap: () {
-        String cpy = isEncoding
-            ? controller.cipherTextController.text.toString()
-            : controller.plainTextController.text.toString();
-        copyText(cpy);
-      },
-      IconData: Icons.copy);
-}
-
-// to copy text into clipboard
-void copyText(String txt) {
-  if (txt.isEmpty) {
-    showSnackBar(
-      title: "Empty Field",
-      message: "There is nothing to copy.",
-      colorText: cyberpunkGrayDark,
-      backgroundColor: cyberpunkLightRed,
-    );
+  } else if (element is EncodeDecodeTypes) {
+    if (element == EncodeDecodeTypes.Base64) {
+      return Base64();
+    }
+    if (element == EncodeDecodeTypes.Base32) {
+      return Base32();
+    }
   } else {
-    Clipboard.setData(ClipboardData(text: txt)).then((value) {
-      showSnackBar(
-        title: "Success",
-        message: "Cipher text copied successfully",
-        backgroundColor: cyberpunkGreenLight,
-        colorText: cyberpunkDarkElevated,
-      );
-    });
+    throw ControllerTypeException(
+        message: "encrypt decrypt element is not right ${element.runtimeType}");
   }
-}
-// endregion
-
-Widget buildFeedbackButton() {
-  return Column(
-    children: [
-      _customIconButton(
-        onTap: () {
-          Get.toNamed(RT_FEEDBACK_SCREEN);
-        },
-        color: cyberpunkLightRed,
-        IconData: Icons.feedback,
-        size: 25
-      ),
-      Text(
-        "Feedback",
-        style: TextStyle(
-          fontFamily: "monospace",
-          fontSize: 13,
-          color: cyberpunkPurpleLight,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    ],
-  );
-}
-
-Widget buildAboutUsButton() {
-  return Column(
-    children: [
-      _customIconButton(
-        onTap: () {
-          Get.toNamed(RT_ABOUT_US_SCREEN);
-        },
-        color: cyberpunkCyanDark,
-        IconData: Icons.person,
-        size: 25
-      ),
-      Text(
-        "About Us",
-        style: TextStyle(
-          fontFamily: "monospace",
-          fontSize: 13,
-          color: cyberpunkPurpleLight,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    ],
-  );
-}
-
-// endregion
-
-bool checkAllTypes({controller}) {
-  return controller is EncryptionController ||
-      controller is DecryptionController ||
-      controller is EncodeController ||
-      controller is DecodeController;
-}
-
-void showSnackBar({title, message, backgroundColor, colorText}) {
-  Get.snackbar(title, message,
-      duration: const Duration(seconds: 5),
-      backgroundColor: backgroundColor,
-      colorText: colorText,
-      snackPosition: SnackPosition.BOTTOM);
-}
-
-PreferredSizeWidget buildEnhancedAppBar({title, content, bottom}) {
-  return AppBar(
-    title: Column(
-      children: [
-        ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [cyberpunkGreen, cyberpunkCyan],
-          ).createShader(bounds),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              fontFamily: 'monospace',
-              letterSpacing: 2.0,
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-          decoration: BoxDecoration(
-            color: cyberpunkGreen.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: cyberpunkGreen.withValues(alpha: 0.4),
-              width: 1,
-            ),
-          ),
-          child: Text(
-            content,
-            style: TextStyle(
-              fontSize: 9,
-              color: cyberpunkGreen,
-              fontFamily: 'monospace',
-              letterSpacing: 1.2,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ],
-    ),
-    centerTitle: true,
-    backgroundColor: cyberpunkDark,
-    elevation: 0,
-    toolbarHeight: 75,
-    bottom: bottom,
-  );
 }

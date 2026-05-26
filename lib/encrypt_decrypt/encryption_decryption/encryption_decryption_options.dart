@@ -1,4 +1,12 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:cipher_decoder/encrypt_decrypt/encryption_decryption/encryption_decryption_model.dart';
+import 'package:cipher_decoder/encrypt_decrypt/encryption_decryption/encryption_decryption_options_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import '../../utils/colors.dart';
+import '../../utils/common_functions.dart';
+import '../../utils/string_constants.dart';
+import '../encryption/encryption_controller.dart';
 
 // ignore:must_be_immutable
 class EncryptionDecryptionOptions extends StatefulWidget {
@@ -8,7 +16,7 @@ class EncryptionDecryptionOptions extends StatefulWidget {
       this.index,
       required this.encryptionDecryptionOptionController}) {
     txt =
-        'Select method to ${controller is EncryptionController ? 'encrypt' : 'decrypt'}';
+        'PROTOCOL_${controller is EncryptionController ? 'ENCRYPT' : 'DECRYPT'}';
   }
 
   final dynamic controller;
@@ -26,7 +34,6 @@ class _EncryptionDecryptionOptionsState
     with SingleTickerProviderStateMixin {
   late AnimationController _glowController;
   late Animation<double> _glowAnimation;
-  double fieldSpacing = 20.0;
 
   @override
   void initState() {
@@ -35,7 +42,7 @@ class _EncryptionDecryptionOptionsState
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
-    _glowAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
+    _glowAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
     );
   }
@@ -46,505 +53,242 @@ class _EncryptionDecryptionOptionsState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // region Method Heading With Delete button
         Row(
           children: [
             Expanded(
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      cyberpunkCyan.withValues(alpha: 0.1),
-                      Colors.transparent,
-                    ],
-                  ),
-                  border: Border.all(
-                    color: cyberpunkCyan.withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(6),
+                  color: terminalWhite,
+                  borderRadius: BorderRadius.circular(2),
                 ),
                 child: Text(
-                  '> ${n > 1 ? '${widget.index! + 1}. ' : ''}${widget.txt.trim().toUpperCase()}',
+                  '${n > 1 ? '${widget.index! + 1}. ' : ''}${widget.txt.toUpperCase()}',
                   style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF00FFFF),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    color: terminalBlack,
                     fontFamily: 'monospace',
-                    letterSpacing: 0.8,
+                    letterSpacing: 1.5,
                   ),
                 ),
               ),
             ),
-            n > 1
-                ? Container(
-                    height: 40,
-                    width: 40,
-                    margin: const EdgeInsets.only(left: 8),
-                    padding: const EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(color: const Color(0xFFFF0040), width: 1),
-                      borderRadius: BorderRadius.circular(6),
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color(0xFFFF0040).withValues(alpha: 0.1),
-                          const Color(0xFFFF0040).withValues(alpha: 0.05),
-                        ],
-                      ),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        widget.encryptionDecryptionOptionController
-                            .removeWidget(
-                                index: widget.index,
-                                controller: widget.controller);
-                      },
-                      icon: const Icon(
-                        Icons.delete_outline,
-                        color: Color(0xFFFF0040),
-                        size: 20,
-                      ),
-                      tooltip: 'DELETE Method',
-                    ),
-                  )
-                : const SizedBox(height: 0),
+            if (n > 1) const SizedBox(width: 8),
+            if (n > 1)
+              _customActionIcon(
+                icon: Icons.delete_outline,
+                color: terminalError,
+                onTap: () => widget.encryptionDecryptionOptionController
+                    .removeWidget(
+                        index: widget.index, controller: widget.controller),
+              ),
           ],
         ),
-        // endregion
 
         const SizedBox(height: 12.0),
 
-        // region Cyberpunk Method Selector Button
+        // Terminal Method Selector Button
         AnimatedBuilder(
           animation: _glowAnimation,
           builder: (context, child) {
             return GestureDetector(
-              onTap: () => _showCyberpunkMethodDialog(),
+              onTap: () => _showMethodDialog(),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      const Color(0xFF00FF41).withValues(alpha: 0.1),
-                      const Color(0xFF00FFFF).withValues(alpha: 0.1),
-                      Colors.black.withValues(alpha: 0.3),
-                    ],
-                  ),
+                  color: terminalBlack,
                   border: Border.all(
-                    color: const Color(0xFF00FF41)
-                        .withValues(alpha: _glowAnimation.value),
-                    width: 2,
+                    color: terminalWhite,
+                    width: 1,
                   ),
-                  borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF00FF41)
-                          .withValues(alpha: _glowAnimation.value * 0.2),
+                      color: terminalWhite.withValues(
+                          alpha: _glowAnimation.value * 0.3),
                       blurRadius: 10,
                       spreadRadius: 1,
-                    ),
+                    )
                   ],
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                child: Obx(
-                  () => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 4),
-                          Text(
-                            widget.encryptionDecryptionOptionController
-                                .options[widget.index!].title!
-                                .toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF00FF41),
-                              fontFamily: 'monospace',
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFF00FF41).withValues(alpha: 0.5),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color(0xFF00FF41).withValues(alpha: 0.1),
-                              Colors.transparent,
-                            ],
+                child: Obx(() => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.encryptionDecryptionOptionController
+                              .options[widget.index!].title!
+                              .toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            color: terminalWhite,
+                            fontFamily: 'monospace',
+                            letterSpacing: 2,
                           ),
                         ),
-                        child: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Color(0xFF00FF41),
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                        const Icon(Icons.code, color: terminalWhite, size: 18),
+                      ],
+                    )),
               ),
             );
           },
         ),
-        //endregion
 
-        // region Conditional Key Input Field
         Obx(() {
-          EncryptionDecryptionModel obj = widget.encryptionDecryptionOptionController.options[widget.index!];
+          EncryptionDecryptionModel obj = widget
+              .encryptionDecryptionOptionController.options[widget.index!];
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) {
-              return SizeTransition(
-                sizeFactor: animation,
-                child: FadeTransition(opacity: animation, child: child),
-              );
-            },
             child: obj.requiresKey
                 ? Container(
-                    key: const ValueKey('conditionalField'),
                     margin: const EdgeInsets.only(top: 16),
                     child: myInputfield(
-                      key: const ValueKey("conditionalField"),
+                      key: Key("key"),
                       context: context,
-                      textTitle: "Enter Key:",
-                      hintText: "Enter Integer Key... ",
+                      textTitle: "KEY_INPUT:",
+                      hintText: "ENTER_KEY",
                       controller: obj.keyController!,
-                      // keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        widget.encryptionDecryptionOptionController
-                            .keyUpdateWidget(index: widget.index,
-                                controller: widget.controller);
-                      },
+                      onChanged: (value) => widget
+                          .encryptionDecryptionOptionController
+                          .keyUpdateWidget(
+                              index: widget.index,
+                              controller: widget.controller),
                       inputFormatters: [
-                        obj is! PlayFairCipher ?  FilteringTextInputFormatter.allow(RegExp(r"[0-9]")) : FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]")),
+                        obj is! PlayFairCipher
+                            ? FilteringTextInputFormatter.allow(
+                                RegExp(r"[0-9]"))
+                            : FilteringTextInputFormatter.allow(
+                                RegExp(r"[a-zA-Z]")),
                       ],
                     ),
                   )
-                : const SizedBox.shrink(key: ValueKey('emptyConditional')),
+                : const SizedBox.shrink(),
           );
         }),
-        //endregion
-
-        Obx(
-          () => Visibility(
-            visible: !widget.encryptionDecryptionOptionController
-                .options[widget.index!].requiresKey,
-            child: SizedBox(
-              height: fieldSpacing * 1.5,
-            ),
-          ),
-        ),
-
-        SizedBox(
-          height: 8,
-        )
+        const SizedBox(height: 12),
       ],
     );
   }
 
-  void _showCyberpunkMethodDialog() {
+  Widget _customActionIcon(
+      {required IconData icon,
+      required Color color,
+      required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 32,
+        width: 38,
+        decoration: BoxDecoration(
+          color: terminalBlack,
+          border: Border.all(color: color, width: 1),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Icon(icon, color: color, size: 18),
+      ),
+    );
+  }
+
+  void _showMethodDialog() {
     Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF0A0A0A),
-                Color(0xFF1A0B2E),
-                Color(0xFF16213E),
-              ],
-            ),
-            border: Border.all(
-              color: const Color(0xFF00FF41),
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF00FF41).withValues(alpha: 0.3),
-                blurRadius: 20,
-                spreadRadius: 2,
-              ),
+            color: terminalBlack,
+            border: Border.all(color: terminalWhite, width: 1),
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: const [
+              BoxShadow(color: Color(0x30FFFFFF), blurRadius: 20)
             ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Dialog Header
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: const Color(0xFF00FFFF).withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        '> SELECT CRYPTO PROTOCOL',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF00FFFF),
-                          fontFamily: 'monospace',
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFFFF0040),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Color(0xFFFF0040),
-                          size: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              const Text(
+                '// SELECT_ALGORITHM',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    color: terminalWhite,
+                    fontFamily: 'monospace',
+                    letterSpacing: 2),
               ),
-
-              const SizedBox(height: 16),
-
-              // Method Grid
-              SizedBox(
-                width: double.maxFinite,
-                height: 200,
+              const Divider(color: terminalWhite, height: 32),
+              Flexible(
                 child: GridView.count(
                   shrinkWrap: true,
-                  crossAxisCount: 2,
+                  crossAxisCount: 1,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 2.5,
+                  childAspectRatio: 5,
                   children: encryptionDecryptionMethods.map((method) {
-                    EncryptionDecryptionModel encryptionDecryptionModel = getMethod(element: method);
+                    EncryptionDecryptionModel model =
+                        getMethod(element: method);
                     bool isSelected = widget
                             .encryptionDecryptionOptionController
                             .options[widget.index!]
                             .title ==
-                        encryptionDecryptionModel.title;
-
-                    return _CyberpunkMethodCard(
-                      title: encryptionDecryptionModel.title!,
-                      isSelected: isSelected,
+                        model.title;
+                    return InkWell(
                       onTap: () {
                         widget.encryptionDecryptionOptionController
                             .updateWidget(
-                          methodObj: encryptionDecryptionModel,
-                          index: widget.index,
-                          controller: widget.controller,
-                        );
+                                methodObj: model,
+                                index: widget.index,
+                                controller: widget.controller);
                         Get.back();
                       },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: isSelected ? terminalWhite : terminalBlack,
+                          border: Border.all(color: terminalWhite, width: 1),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              model.title!.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w900,
+                                color:
+                                    isSelected ? terminalBlack : terminalWhite,
+                                fontFamily: 'monospace',
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            if (isSelected)
+                              Icon(Icons.check_circle_outline,
+                                  color: terminalBlack, size: 16),
+                          ],
+                        ),
+                      ),
                     );
                   }).toList(),
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              // Footer
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const Color(0xFF00FF41).withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(4),
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF00FF41).withValues(alpha: 0.05),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: Color(0xFF00FFFF),
-                      size: 14,
-                    ),
-                    SizedBox(width: 6),
-                    Text(
-                      'SELECT ENCRYPTION ALGORITHM',
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: Color(0xFF00FFFF),
-                        fontFamily: 'monospace',
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                    ),
-                  ],
-                ),
+              ElevatedButton(
+                onPressed: () => Get.back(),
+                child: const Text('CANCEL'),
               ),
             ],
           ),
         ),
       ),
-      barrierDismissible: true,
-      barrierColor: Colors.black.withValues(alpha: 0.8),
     );
   }
 
   @override
   void dispose() {
     _glowController.dispose();
-    super.dispose();
-  }
-}
-
-class _CyberpunkMethodCard extends StatefulWidget {
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _CyberpunkMethodCard({
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  State<_CyberpunkMethodCard> createState() => _CyberpunkMethodCardState();
-}
-
-class _CyberpunkMethodCardState extends State<_CyberpunkMethodCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _hoverController;
-  late Animation<double> _scaleAnimation;
-  bool _isHovered = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _hoverController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
-      CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: GestureDetector(
-            onTap: widget.onTap,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: widget.isSelected
-                    ? LinearGradient(
-                        colors: [
-                          const Color(0xFF00FF41).withValues(alpha: 0.3),
-                          const Color(0xFF00FFFF).withValues(alpha: 0.2),
-                        ],
-                      )
-                    : LinearGradient(
-                        colors: [
-                          const Color(0xFF00FFFF)
-                              .withValues(alpha: 0.2),
-                          const Color(0xFF9D00FF)
-                              .withValues(alpha: 0.15),
-                        ],
-                      ),
-                border: Border.all(
-                  color: widget.isSelected
-                      ? const Color(0xFF00FF41)
-                      : (_isHovered
-                          ? const Color(0xFF00FFFF)
-                          : const Color(0xFF00FFFF).withValues(alpha: 0.5)),
-                  width: widget.isSelected ? 2 : 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: widget.isSelected || _isHovered
-                    ? [
-                        BoxShadow(
-                          color: widget.isSelected
-                              ? const Color(0xFF00FF41).withValues(alpha: 0.4)
-                              : const Color(0xFF00FFFF).withValues(alpha: 0.3),
-                          blurRadius: 10,
-                          spreadRadius: 1,
-                        ),
-                      ]
-                    : null,
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (widget.isSelected)
-                      const Icon(
-                        Icons.check_circle_outline,
-                        color: Color(0xFF00FF41),
-                        size: 16,
-                      ),
-                    if (widget.isSelected) const SizedBox(height: 4),
-                    Text(
-                      widget.title.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: widget.isSelected
-                            ? const Color(0xFF00FF41)
-                            : const Color(0xFF00FFFF),
-                        fontFamily: 'monospace',
-                        letterSpacing: 0.8,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _hoverController.dispose();
     super.dispose();
   }
 }

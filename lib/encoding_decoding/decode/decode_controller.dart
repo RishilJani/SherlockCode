@@ -1,7 +1,7 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:flutter/material.dart';
+import '../encode_decode/encode_decode_model.dart';
 
-class DecodeController {
-  TextEditingController plainTextController = TextEditingController();
+class DecodeController {TextEditingController plainTextController = TextEditingController();
   TextEditingController cipherTextController = TextEditingController();
   TextEditingController keyController = TextEditingController(text: '0');
 
@@ -14,6 +14,3 @@ class DecodeController {
     }
   }
 }
-/*
-A single remaining encoded character in the last quadruple or a padding of 3 characters is not allowed
- */

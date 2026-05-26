@@ -1,125 +1,32 @@
-import 'package:cipher_decoder/utils/import_export.dart';
-
-// Widget commonScreenLayout({
-//   required BuildContext context,
-//   required controller,
-//   required String titleText,
-//   required methodsController,
-//   bool isEncoding = true,
-//   bool isEncryption = true,
-// }) {
-//   if (!checkAllTypes(controller: controller)) {
-//     throw ControllerTypeException(
-//         message: "Controller Type is not right at modernScreenLayout");
-//   }
-//
-//   if (methodsController is! EncodeDecodeOptionController &&
-//       methodsController is! EncryptionDecryptionOptionsController) {
-//     throw ControllerTypeException(
-//         message: "methodController Type is not right at modernScreenLayout");
-//   }
-//   return Scaffold(
-//     backgroundColor: cyberpunkDark,
-//     body: GestureDetector(
-//       behavior: HitTestBehavior.translucent,
-//       onTap: () => FocusScope.of(context).unfocus(),
-//       child: Container(
-//         width: double.infinity,
-//         height: double.infinity,
-//         decoration: const BoxDecoration(
-//           gradient: LinearGradient(
-//             begin: Alignment.topLeft,
-//             end: Alignment.bottomRight,
-//             colors: [
-//               Color(0xFF0A0A0A),
-//               Color(0xFF1A1A2E),
-//               cyberpunkDark,
-//               Color(0xFF16213E),
-//             ],
-//             stops: [0.0, 0.3, 0.7, 1.0],
-//           ),
-//         ),
-//         child: SafeArea(
-//           child: Column(
-//             children: [
-//               Expanded(
-//                 child: SingleChildScrollView(
-//                   physics: const BouncingScrollPhysics(),
-//                   padding: const EdgeInsets.symmetric(
-//                       horizontal: 16.0, vertical: 8.0),
-//                   child: Column(
-//                     children: [
-//                       const SizedBox(height: 10),
-//
-//                       // 🎯 INPUT CARD
-//                       buildInputCard(controller, context, titleText,
-//                           methodsController, isEncoding),
-//
-//                       const SizedBox(height: 20),
-//
-//                       // 🎯 METHODS CARD
-//                       buildMethodsCard(methodsController, controller),
-//
-//                       if (isEncryption) ...[
-//                         const SizedBox(height: 20),
-//                         buildHorizontalAddCard(controller, methodsController),
-//                       ],
-//
-//                       const SizedBox(height: 20),
-//
-//                       // 🎯 OUTPUT CARD
-//                       buildHorizontalOutputCard(
-//                           controller, context, methodsController, isEncoding),
-//
-//                       const SizedBox(height: 20),
-//
-//                       // 🎯 INFO CARD
-//                       buildHorizontalInfoCard(methodsController,context: context),
-//
-//                       const SizedBox(height: 32),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../encoding_decoding/decode/decode_controller.dart';
+import '../encoding_decoding/encode/encode_controller.dart';
+import '../encoding_decoding/encode_decode/encode_decode_option_controller.dart';
+import '../encrypt_decrypt/decryption/decryption_controller.dart';
+import '../encrypt_decrypt/encryption/encryption_controller.dart';
+import 'colors.dart';
+import 'common_functions.dart';
 
 Widget screenLayout(context, {required Widget child}) {
   return Scaffold(
-    backgroundColor: cyberpunkDark,
+    backgroundColor: terminalBlack,
     body: GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0A0A0A),
-              Color(0xFF1A1A2E),
-              cyberpunkDark,
-              Color(0xFF16213E),
-            ],
-            stops: [0.0, 0.3, 0.7, 1.0],
-          ),
-        ),
+        color: terminalBlack,
         child: SafeArea(
           child: Column(
             children: [
-              Expanded(child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                child: child
-              )),
+              Expanded(
+                  child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: child)),
             ],
           ),
         ),
@@ -130,383 +37,152 @@ Widget screenLayout(context, {required Widget child}) {
 
 Widget buildInputCard(
     controller, context, String titleText, methodsController, bool isEncoding) {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: cyberpunkCyan.withValues(alpha: 0.15),
-          blurRadius: 16,
-          spreadRadius: 1,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: cyberpunkDarkElevated,
-          ),
-          child: myInputfield(
-            controller: controller,
-            context: context,
-            textTitle: titleText,
-            hintText: 'ENTER DATA...',
-            minLines: 3,
-            maxLines: 6,
-            keyboardType: TextInputType.multiline,
-            textInputAction: TextInputAction.newline,
-            onChanged: (value) {
-              methodsController.onChange(controller: controller);
-            },
-            suffixIcon: buildMobilePasteButton(
-                controller: controller, onChange: methodsController.onChange),
-            isEncode: true,
-            isPlain: isEncoding,
-            methodController: methodsController,
-          ),
-        ),
-      ],
+  return buildTerminalPanel(
+    child: myInputfield(
+      controller: controller,
+      context: context,
+      textTitle: titleText,
+      hintText: 'AWAITING INPUT...',
+      minLines: 3,
+      maxLines: 6,
+      keyboardType: TextInputType.multiline,
+      onChanged: (value) => methodsController.onChange(controller: controller),
+      suffixIcon: buildMobilePasteButton(
+          controller: controller, onChange: methodsController.onChange),
+      isEncode: true,
+      isPlain: isEncoding,
+      methodController: methodsController,
     ),
   );
 }
 
-//  HORIZONTAL METHODS CARD
 Widget buildMethodsCard(methodsController, controller) {
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          cyberpunkPurple.withValues(alpha: 0.15),
-          cyberpunkCyan.withValues(alpha: 0.08),
-        ],
-      ),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: cyberpunkPurple.withValues(alpha: 0.3),
-        width: 1,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: cyberpunkPurple.withValues(alpha: 0.15),
-          blurRadius: 14,
-          spreadRadius: 1,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: cyberpunkPurple.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: cyberpunkPurple.withValues(alpha: 0.4),
-                  width: 1,
-                ),
-              ),
-              child: const Icon(
-                Icons.tune,
-                size: 16,
-                color: cyberpunkPurple,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'ALGORITHMS',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: cyberpunkPurple,
-                      fontFamily: 'monospace',
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                  Text(
-                    'Select method',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: cyberpunkPurple.withValues(alpha: 0.8),
-                      fontFamily: 'monospace',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: cyberpunkPurple.withValues(alpha: 0.2),
-              width: 1,
-            ),
-          ),
-          child: methodsController.getOptionList(controller: controller),
-        ),
-      ],
+  return buildTerminalPanel(
+    title: 'ALGORITHMS',
+    icon: Icons.tune,
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      child: methodsController.getOptionList(controller: controller),
     ),
   );
 }
 
-// HORIZONTAL ADD CARD
 Widget buildHorizontalAddCard(controller, methodsController) {
-  return Container(
-    height: 44,
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          cyberpunkCyan.withValues(alpha: 0.2),
-          cyberpunkPurple.withValues(alpha: 0.15),
-        ],
+  return InkWell(
+    onTap: () => methodsController.addWidget(controller: controller),
+    child: Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: terminalBlack,
+        border: Border.all(color: terminalWhite, width: 1),
+        borderRadius: BorderRadius.circular(4),
       ),
-      border: Border.all(color: cyberpunkCyan.withValues(alpha: 0.4), width: 1),
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: cyberpunkCyan.withValues(alpha: 0.2),
-          blurRadius: 12,
-          spreadRadius: 1,
-          offset: const Offset(0, 3),
-        ),
-      ],
-    ),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          methodsController.addWidget(controller: controller);
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: cyberpunkCyan.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(7),
-              ),
-              child: const Icon(
-                Icons.add,
-                size: 16,
-                color: cyberpunkCyan,
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'ADD METHOD',
-              style: TextStyle(
-                fontSize: 11,
-                color: cyberpunkCyan,
-                fontFamily: 'monospace',
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.6,
-              ),
-            ),
-          ],
-        ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.add, size: 18, color: terminalWhite),
+          SizedBox(width: 10),
+          Text(
+            'ADD MODULE',
+            style: TextStyle(
+                fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 2),
+          ),
+        ],
       ),
     ),
   );
 }
 
-// HORIZONTAL OUTPUT CARD
 Widget buildHorizontalOutputCard(
     controller, context, methodsController, bool isEncoding) {
   final textTitle = _getOutputTitle(controller);
-  final hintText = "$textTitle...";
-
   return Column(
     children: [
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: cyberpunkPurple.withValues(alpha: 0.15),
-              blurRadius: 16,
-              spreadRadius: 1,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                color: cyberpunkDarkElevated,
-              ),
-              child: myInputfield(
-                controller: controller,
-                context: context,
-                textTitle: textTitle,
-                hintText: hintText,
-                readonly: true,
-                methodController: methodsController,
-                suffixIcon: buildMobileCopyButton(controller, isEncoding),
-                isEncode: false,
-                minLines: 3,
-                maxLines: 6,
-                isPlain: !isEncoding,
-              ),
-            ),
-          ],
+      buildTerminalPanel(
+        child: myInputfield(
+          controller: controller,
+          context: context,
+          textTitle: textTitle,
+          hintText: 'PROCESSING...',
+          readonly: true,
+          methodController: methodsController,
+          suffixIcon: buildMobileCopyButton(controller, isEncoding),
+          isEncode: false,
+          minLines: 3,
+          maxLines: 6,
+          isPlain: !isEncoding,
         ),
       ),
-      showDecodeLengthException(
-          controller: controller, methodController: methodsController),
+      if (methodsController is EncodeDecodeOptionController &&
+          controller is DecodeController)
+        Obx(() => methodsController.showError.value
+            ? const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text("ERROR: INVALID DATA FORMAT",
+                    style: TextStyle(
+                        color: terminalError, fontWeight: FontWeight.bold)),
+              )
+            : const SizedBox.shrink()),
     ],
   );
 }
 
-//  HORIZONTAL INFO CARD
 Widget buildHorizontalInfoCard(methodsController, {context}) {
+  return buildTerminalPanel(
+    title: 'DOCUMENTATION',
+    icon: Icons.info_outline,
+    child:
+        Obx(() => description(context: context, controller: methodsController)),
+  );
+}
+
+// Helper for consistent panel styling
+Widget buildTerminalPanel(
+    {String? title, IconData? icon, required Widget child}) {
   return Container(
-    padding: const EdgeInsets.all(15),
+    margin: const EdgeInsets.symmetric(vertical: 8),
     decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          cyberpunkGreen.withValues(alpha: 0.15),
-          cyberpunkCyan.withValues(alpha: 0.08),
-        ],
-      ),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: cyberpunkGreen.withValues(alpha: 0.3),
-        width: 1,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: cyberpunkGreen.withValues(alpha: 0.15),
-          blurRadius: 14,
-          spreadRadius: 1,
-          offset: const Offset(0, 4),
-        ),
+      color: terminalBlack,
+      border: Border.all(color: terminalWhite, width: 1),
+      borderRadius: BorderRadius.circular(4),
+      boxShadow: const [
+        BoxShadow(color: Color(0x15FFFFFF), blurRadius: 8, spreadRadius: 0),
       ],
     ),
     child: Column(
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            // Icon
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: cyberpunkGreen.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: cyberpunkGreen.withValues(alpha: 0.4),
-                  width: 1,
+        if (title != null)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(color: terminalWhite, width: 1)),
+            ),
+            child: Row(
+              children: [
+                if (icon != null) Icon(icon, size: 14, color: terminalWhite),
+                if (icon != null) const SizedBox(width: 8),
+                Text(
+                  title.toUpperCase(),
+                  style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.5),
                 ),
-              ),
-              child: const Icon(
-                Icons.info_outline,
-                size: 16,
-                color: cyberpunkGreen,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'DETAILS',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: cyberpunkGreen,
-                      fontFamily: 'monospace',
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                  Text(
-                    'Method info',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: cyberpunkGreen.withValues(alpha: 0.8),
-                      fontFamily: 'monospace',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: cyberpunkGreen.withValues(alpha: 0.2),
-              width: 1,
+              ],
             ),
           ),
-          child: Obx(() {
-            return description(
-              context: context,
-              controller: methodsController,
-            );
-          }),
-        ),
+        child,
       ],
     ),
   );
 }
 
 String _getOutputTitle(controller) {
-  if (controller is EncryptionController) {
-    return "ENCRYPTED";
-  } else if (controller is DecryptionController) {
-    return "DECRYPTED";
-  } else if (controller is EncodeController) {
-    return "ENCODED";
-  } else if (controller is DecodeController) {
-    return "DECODED";
-  }
-  return "PROCESSED";
-}
-
-Widget showDecodeLengthException({controller, methodController}) {
-  if (methodController is EncodeDecodeOptionController &&
-      controller is DecodeController) {
-    return Obx(
-      () {
-        if (methodController.showError.value) {
-          return const Text("Invalid Format to decode",
-              style: TextStyle(color: Colors.red, fontSize: 16));
-        } else {
-          return const SizedBox(height: 0);
-        }
-      },
-    );
-  }
-  return const SizedBox(height: 0);
+  if (controller is EncryptionController) return "ENCRYPTED_DATA";
+  if (controller is DecryptionController) return "DECRYPTED_DATA";
+  if (controller is EncodeController) return "ENCODED_OUTPUT";
+  if (controller is DecodeController) return "DECODED_OUTPUT";
+  return "OUTPUT";
 }

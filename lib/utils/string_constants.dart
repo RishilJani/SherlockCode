@@ -6,7 +6,8 @@ const String VERSION_NO = "1.0.0";
 const String DU_URL = "https://www.darshan.ac.in/";
 const String ANDROID_APP_URL = "URL Here";
 const String IOS_APP_URL = "URL Here";
-const String SHARE_APP_MESSAGE = 'Start you journey of cyber security by learning Encryption Decryption algorithms practically, with encoding and decoding.';
+const String SHARE_APP_MESSAGE =
+    'Start you journey of cyber security by learning Encryption Decryption algorithms practically, with encoding and decoding.';
 const String APP_LOGO_PATH = 'assets/image/SherlockCode.jpg';
 const String DU_LOGO_PATH = 'assets/image/DU_Logo.jpeg';
 const String ASWDC_LOGO_PATH = 'assets/image/ASWDC.jpeg';
@@ -26,8 +27,10 @@ const String EN_ATBASH_CIPHER = "Atbash Cipher";
 const String EN_RAIL_FENCE = "Rail Fence";
 const String EN_PLAY_FAIR = "PlayFair";
 
-const String CEASER_CIPHER_DESC = "Caesar cipher is one of the simplest and most widely known encryption techniques, where each letter is shifted exactly k places.(Generally 3)";
-const String ATBASH_CIPHER_DESC = "The Atbash cipher is a particular type of monoalphabetic cipher formed by taking the alphabet and mapping it to its reverse, so that the first letter becomes the last letter, the second letter becomes the second to last letter, and so on.";
+const String CEASER_CIPHER_DESC =
+    "Caesar cipher is one of the simplest and most widely known encryption techniques, where each letter is shifted exactly k places.(Generally 3)";
+const String ATBASH_CIPHER_DESC =
+    "The Atbash cipher is a particular type of monoalphabetic cipher formed by taking the alphabet and mapping it to its reverse, so that the first letter becomes the last letter, the second letter becomes the second to last letter, and so on.";
 const String RAIL_FENCE_DESC = "This is Rail Fence Cipher";
 const String PLAY_FAIR_DESC = "This is play fair cipher";
 // endregion
@@ -40,13 +43,13 @@ enum EncryptionDecryptionTypes {
   Play_Fair_Cipher
 }
 
-enum EncodeDecodeTypes{
+enum EncodeDecodeTypes {
   Base64,
   Base32,
 }
 
-
-List<EncryptionDecryptionTypes> encryptionDecryptionMethods = EncryptionDecryptionTypes.values;
+List<EncryptionDecryptionTypes> encryptionDecryptionMethods =
+    EncryptionDecryptionTypes.values;
 
 List<EncodeDecodeTypes> encodeDecodeMethods = EncodeDecodeTypes.values;
 
@@ -56,8 +59,10 @@ List<EncodeDecodeTypes> encodeDecodeMethods = EncodeDecodeTypes.values;
 const String EN_BASE64 = "Base64";
 const String EN_BASE32 = "Base32";
 
-const String BASE64_DESC = "Each Base64 character represents 6 bits (2^6 = 64).\nBase64 makes the data size ~33% larger.";
-const String BASE32_DESC = "Each Base32 character represents 5 bits (2^5 = 32).\nBase32 makes the data size ~60% larger.";
+const String BASE64_DESC =
+    "Each Base64 character represents 6 bits (2^6 = 64).\nBase64 makes the data size ~33% larger.";
+const String BASE32_DESC =
+    "Each Base32 character represents 5 bits (2^5 = 32).\nBase32 makes the data size ~60% larger.";
 // endregion
 
 // region Routes
@@ -85,18 +90,22 @@ const String TAG_DECODE = "decode";
 // endregion
 
 // region Exception
-const String DECODE_LENGTH_ERROR = "A single remaining encoded character in the last quadruple or a padding of 3 characters is not allowed";
+const String DECODE_LENGTH_ERROR =
+    "A single remaining encoded character in the last quadruple or a padding of 3 characters is not allowed";
 //endregion
 
 // region RegExp
 
-var base64RegExp = RegExp(r'^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$');
-var base32RegExp = RegExp(r'^(?:[A-Z2-7]{8})*(?:[A-Z2-7]{2}======|[A-Z2-7]{4}====|[A-Z2-7]{5}===|[A-Z2-7]{7}=)?$' );
+var base64RegExp =
+    RegExp(r'^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$');
+var base32RegExp = RegExp(
+    r'^(?:[A-Z2-7]{8})*(?:[A-Z2-7]{2}======|[A-Z2-7]{4}====|[A-Z2-7]{5}===|[A-Z2-7]{7}=)?$');
 
 // endregion
 
 // region ApiConstants
-const String BASE_URL = "http://api.aswdc.in/Api/MST_AppVersions/PostAppFeedback/AppPostFeedback";
+const String BASE_URL =
+    "http://api.aswdc.in/Api/MST_AppVersions/PostAppFeedback/AppPostFeedback";
 
 const String API_APP_NAME = "AppName";
 const String API_VERSiON_NO = "VersionNo";

@@ -1,4 +1,7 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:cipher_decoder/utils/app_routes.dart';
+import 'package:cipher_decoder/utils/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const CipherDecoderApp());
@@ -14,184 +17,96 @@ class CipherDecoderApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: cyberpunkGreen,
-          primary: cyberpunkGreen,
-          onPrimary: cyberpunkDark,
-          secondary: cyberpunkCyan,
-          onSecondary: cyberpunkDark,
-          tertiary: cyberpunkPurple,
-          onTertiary: cyberpunkDark,
-          surface: cyberpunkDarkElevated,
-          onSurface: Colors.white,
-          error: cyberpunkRed,
-          onError: Colors.white,
+        fontFamily: 'monospace',
+        colorScheme: const ColorScheme.dark(
+          primary: terminalWhite,
+          onPrimary: terminalBlack,
+          secondary: terminalWhite,
+          onSecondary: terminalBlack,
+          surface: terminalBlack,
+          onSurface: terminalWhite,
+          error: terminalError,
         ),
-        scaffoldBackgroundColor: cyberpunkDark,
-        canvasColor: cyberpunkDark,
+        scaffoldBackgroundColor: terminalBlack,
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
           titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
+            color: terminalWhite,
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
             fontFamily: 'monospace',
+            letterSpacing: 2,
           ),
-          iconTheme: IconThemeData(color: cyberpunkCyan),
+          iconTheme: IconThemeData(color: terminalWhite),
         ),
         cardTheme: CardThemeData(
-          color: cyberpunkGrayDark,
-          elevation: 8,
-          shadowColor: cyberpunkGreen.withValues(alpha : 0.3),
+          color: terminalBlack,
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: terminalWhite, width: 1),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: cyberpunkDarkElevated,
+          fillColor: terminalBlack,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: cyberpunkCyan.withValues(alpha: 0.3)),
+            borderRadius: BorderRadius.circular(4),
+            borderSide: const BorderSide(color: terminalWhite, width: 1),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: cyberpunkCyan.withValues(alpha: 0.3)),
+            borderRadius: BorderRadius.circular(4),
+            borderSide: const BorderSide(color: terminalWhite, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: cyberpunkCyan, width: 2),
+            borderRadius: BorderRadius.circular(4),
+            borderSide: const BorderSide(color: terminalWhite, width: 2),
           ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: cyberpunkRed),
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          hintStyle: TextStyle(
-            color: Colors.grey[400],
-            fontFamily: 'monospace',
-          ),
+          labelStyle: const TextStyle(color: terminalWhite, fontFamily: 'monospace'),
+          hintStyle: const TextStyle(color: terminalMidGrey, fontFamily: 'monospace'),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: cyberpunkGreen,
-            foregroundColor: cyberpunkDark,
-            elevation: 4,
-            shadowColor: cyberpunkGreen.withValues(alpha: 0.4),
+            backgroundColor: terminalWhite,
+            foregroundColor: terminalBlack,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(4),
+              side: const BorderSide(color: terminalWhite, width: 1),
             ),
             textStyle: const TextStyle(
               fontFamily: 'monospace',
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1,
             ),
           ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: cyberpunkCyan,
-            textStyle: const TextStyle(
-              fontFamily: 'monospace',
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        iconTheme: const IconThemeData(
-          color: cyberpunkCyan,
         ),
         textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
-          displayMedium: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
-          displaySmall: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
-          headlineLarge: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
-          headlineMedium: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-          headlineSmall: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-          titleLarge: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-          titleMedium: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
-          ),
-          titleSmall: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
-          ),
-          bodyLarge: TextStyle(
-            fontFamily: 'monospace',
-            color: Colors.white,
-          ),
-          bodyMedium: TextStyle(
-            fontFamily: 'monospace',
-            color: Colors.white,
-          ),
-          bodySmall: TextStyle(
-            fontFamily: 'monospace',
-            color: Color(0xFFBDBDBD),
-          ),
-          labelLarge: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w600,
-            color: cyberpunkCyan,
-          ),
-          labelMedium: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w500,
-            color: cyberpunkCyan,
-          ),
-          labelSmall: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w500,
-            color: cyberpunkCyan,
-          ),
+          displayLarge: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          displayMedium: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          displaySmall: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          headlineLarge: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          headlineMedium: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          headlineSmall: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          titleLarge: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          titleMedium: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          titleSmall: TextStyle(fontFamily: 'monospace', color: terminalWhite, fontWeight: FontWeight.bold),
+          bodyLarge: TextStyle(fontFamily: 'monospace', color: terminalWhite),
+          bodyMedium: TextStyle(fontFamily: 'monospace', color: terminalWhite),
+          bodySmall: TextStyle(fontFamily: 'monospace', color: terminalWhite),
+          labelLarge: TextStyle(fontFamily: 'monospace', color: terminalWhite),
+          labelMedium: TextStyle(fontFamily: 'monospace', color: terminalWhite),
+          labelSmall: TextStyle(fontFamily: 'monospace', color: terminalWhite),
         ),
         tabBarTheme: const TabBarThemeData(
-          labelColor: cyberpunkCyan,
-          unselectedLabelColor: Colors.grey,
+          labelColor: terminalBlack,
+          unselectedLabelColor: terminalWhite,
           indicator: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: cyberpunkCyan, width: 3),
-            ),
+            color: terminalWhite,
           ),
-          labelStyle: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w600,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.w500,
-          ),
+          labelStyle: TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.bold),
+          unselectedLabelStyle: TextStyle(fontFamily: 'monospace'),
         ),
       ),
       initialRoute: AppRoutes.InitialRoute,

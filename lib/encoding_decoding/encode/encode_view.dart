@@ -1,4 +1,10 @@
-import 'package:cipher_decoder/utils/import_export.dart';
+import 'package:flutter/material.dart';
+
+import '../../utils/colors.dart';
+import '../../utils/screen_layout.dart';
+import '../encode_decode/encode_decode_option_controller.dart';
+import 'encode_controller.dart';
+
 // ignore: must_be_immutable
 class EncodeView extends StatelessWidget {
   EncodeController encodeController = EncodeController();

@@ -1,6 +1,9 @@
-import 'package:cipher_decoder/utils/import_export.dart';
 
-abstract class EncodeDecodeModel{
+import 'dart:convert';
+
+import '../../utils/string_constants.dart';
+
+abstract class EncodeDecodeModel {
   String? title;
   String? description;
   RegExp? validRegexp;

@@ -1,6 +1,12 @@
-import 'package:cipher_decoder/utils/import_export.dart';
 
 // ignore: must_be_immutable
+import 'package:flutter/material.dart';
+
+import '../utils/colors.dart';
+import '../utils/common_functions.dart';
+import 'decryption/decryption_view.dart';
+import 'encryption/encryption_view.dart';
+
 class DashboardEncryptDecrypt extends StatefulWidget {
   const DashboardEncryptDecrypt({super.key});
 
@@ -29,23 +35,16 @@ class _DashboardEncryptDecryptState extends State<DashboardEncryptDecrypt>
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: cyberpunkDark,
+        backgroundColor: terminalBlack,
         appBar: buildEnhancedAppBar(
-          title: 'ENCRYPT / DECRYPT',
-          content: '> CRYPTOGRAPHIC OPERATIONS TERMINAL',
+          title: 'CRYPTOGRAPHY',
+          content: 'TERMINAL_PROTOCOLS_V1.0',
           bottom: _buildEnhancedTabBar()
         ),
         body: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                cyberpunkDark,
-                cyberpunkDarkElevated,
-                Color(0xFF16213E),
-              ],
-            ),
+            color: terminalBlack,
+            border: Border(top: BorderSide(color: terminalWhite, width: 0.5)),
           ),
           child: TabBarView(
             controller: _tabController,
@@ -63,63 +62,42 @@ class _DashboardEncryptDecryptState extends State<DashboardEncryptDecrypt>
     return PreferredSize(
       preferredSize: const Size.fromHeight(70),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              cyberpunkPurple.withValues(alpha: 0.1),
-              cyberpunkCyan.withValues(alpha: 0.05),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(16),
+          color: terminalBlack,
+          borderRadius: BorderRadius.circular(4),
           border: Border.all(
-            color: cyberpunkPurple.withValues(alpha: 0.2),
+            color: terminalWhite,
             width: 1,
           ),
         ),
         child: TabBar(
           controller: _tabController,
           indicator: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                cyberpunkGreen.withValues(alpha: 0.3),
-                cyberpunkCyan.withValues(alpha: 0.2),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: cyberpunkGreen.withValues(alpha: 0.4),
-              width: 1,
-            ),
+            color: terminalWhite,
+            borderRadius: BorderRadius.circular(2),
           ),
           indicatorSize: TabBarIndicatorSize.tab,
-          labelColor: cyberpunkGreen,
-          unselectedLabelColor: cyberpunkCyan.withValues(alpha: 0.7),
+          labelColor: terminalBlack,
+          unselectedLabelColor: terminalWhite,
           labelStyle: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w800,
+            fontSize: 13,
+            fontWeight: FontWeight.w900,
             fontFamily: 'monospace',
-            letterSpacing: 1.0,
+            letterSpacing: 2.0,
           ),
           unselectedLabelStyle: const TextStyle(
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
             fontFamily: 'monospace',
-            letterSpacing: 1.0,
+            letterSpacing: 2.0,
           ),
           tabs: const [
-            Tab(
-              // icon: Icon(Icons.lock, size: 20),
-              text: "ENCRYPTION",
-            ),
-            Tab(
-              // icon: Icon(Icons.lock_open, size: 20),
-              text: "DECRYPTION",
-            ),
+            Tab(text: "ENCRYPT"),
+            Tab(text: "DECRYPT"),
           ],
         ),
       ),
     );
   }
 }
-
