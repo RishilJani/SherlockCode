@@ -8,16 +8,15 @@ import '../../utils/common_functions.dart';
 import '../../utils/string_constants.dart';
 import 'encryption_decryption_controller.dart';
 
-class EncryptionDecryptionOptions extends StatelessWidget {
-  EncryptionDecryptionOptions(
+class ED_OptionsView extends StatelessWidget {
+  ED_OptionsView(
       {super.key,
-      required this.controller,
-      this.index,
-      required this.edOptionController,
-      this.isEncrypt = true});
+      required this.index,
+      this.isEncrypt = true}){
+    edOptionController = Get.find();
+  }
 
-  final dynamic controller;
-  final int? index;
+  final int index;
   final bool isEncrypt;
   late final EncryptionDecryptionOptionsController edOptionController;
 
@@ -34,14 +33,13 @@ class EncryptionDecryptionOptions extends StatelessWidget {
               // for title
               Expanded(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: terminalWhite,
                     borderRadius: BorderRadius.circular(2),
                   ),
                   child: Text(
-                    '${n > 1 ? '${index! + 1}. ' : ''}Protocol',
+                    '${n > 1 ? '${index + 1}. ' : ''}Protocol',
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w900,
@@ -57,8 +55,7 @@ class EncryptionDecryptionOptions extends StatelessWidget {
                 _customActionIcon(
                   icon: Icons.delete_outline,
                   color: terminalError,
-                  onTap: () => edOptionController.removeWidget(
-                      index: index, controller: controller),
+                  onTap: () => edOptionController.removeWidget(index: index),
                 ),
             ],
           ),
@@ -82,7 +79,7 @@ class EncryptionDecryptionOptions extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: terminalWhite,
-                  blurRadius: 10,
+                  blurRadius: 5,
                   spreadRadius: 1,
                 )
               ],
@@ -92,8 +89,7 @@ class EncryptionDecryptionOptions extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      edOptionController.options[index!].model.title
-                          .toUpperCase(),
+                      edOptionController.options[index].model.title.toUpperCase(),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
@@ -108,30 +104,26 @@ class EncryptionDecryptionOptions extends StatelessWidget {
           ),
         ),
 
+        // Optional Key field
         Obx(() {
-          EncryptionDecryptionController obj =
-              edOptionController.options[index!];
+          EncryptionDecryptionController obj = edOptionController.options[index];
+          List<TextInputFormatter>? inputFormatters = obj.model is PlayFairCipher
+              ? null
+              : [FilteringTextInputFormatter.allow(RegExp(r"[0-9]"))];
+          TextInputType? keyboardType = obj.model is PlayFairCipher
+              ? TextInputType.text
+              : TextInputType.number;
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: obj.model.requiresKey
                 ? Container(
-                    margin:
-                        const EdgeInsets.only(left: 20, bottom: 10, right: 20),
-                    child: myInputfield(
-                      key: Key("key"),
-                      context: context,
-                      textTitle: "KEY_INPUT:",
-                      hintText: "ENTER_KEY",
+                    margin: const EdgeInsets.only(left: 20, bottom: 10, right: 20),
+                    child: customTextFormField(
+                      hintText: "ENTER KEY",
                       controller: obj.model.keyController!,
-                      onChanged: (value) => edOptionController.onChange(
-                          controller: controller, isEncrypt: isEncrypt),
-                      inputFormatters: [
-                        obj is! PlayFairCipher
-                            ? FilteringTextInputFormatter.allow(
-                                RegExp(r"[0-9]"))
-                            : FilteringTextInputFormatter.allow(
-                                RegExp(r"[a-zA-Z]")),
-                      ],
+                      onChange: (String value) => edOptionController.onChange(isEncrypt: isEncrypt),
+                      keyboardType: keyboardType,
+                      inputFormatters: inputFormatters,
                     ),
                   )
                 : const SizedBox.shrink(),
@@ -196,17 +188,15 @@ class EncryptionDecryptionOptions extends StatelessWidget {
                   mainAxisSpacing: 12,
                   childAspectRatio: 5,
                   children: encryptionDecryptionMethods.map((method) {
-                    EncryptionDecryptionController cont =
-                        getMethodObject(element: method);
+                    EncryptionDecryptionController cont = getMethodObject(element: method);
                     bool isSelected =
-                        edOptionController.options[index!].model.title ==
+                        edOptionController.options[index].model.title ==
                             cont.model.title;
                     return InkWell(
                       onTap: () {
                         edOptionController.updateWidget(
                             methodController: cont,
                             index: index,
-                            controller: controller,
                             isEncrypt: isEncrypt);
                         Get.back();
                       },

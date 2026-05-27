@@ -16,13 +16,13 @@ class DashboardEncryptDecrypt extends StatefulWidget {
 class _DashboardEncryptDecryptState extends State<DashboardEncryptDecrypt>
     with TickerProviderStateMixin {
   late TabController _tabController;
-
   final EncryptionDecryptionOptionsController edOptionsController = Get.put(EncryptionDecryptionOptionsController());
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+
   }
 
   @override

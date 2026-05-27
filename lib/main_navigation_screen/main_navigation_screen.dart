@@ -1,7 +1,8 @@
+import 'package:cipher_decoder/encrypt_decrypt/decryption/decryption_view.dart';
+import 'package:cipher_decoder/encrypt_decrypt/encryption/encryption_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../dashboard/dashboard.dart';
-import '../encrypt_decrypt/dashboard_encrypt_decrypt.dart';
 import '../utils/colors.dart';
 import '../utils/string_constants.dart';
 import 'main_navigation_screen_controller.dart';
@@ -24,7 +25,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     super.initState();
 
     navigationController
-        .setTabController(TabController(length: 2, vsync: this));
+        .setTabController(TabController(length: 3, vsync: this));
     navigationController.tabController.addListener(() {
       if (!navigationController.tabController.indexIsChanging &&
           navigationController.selectedIndex.value !=
@@ -37,7 +38,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
   late List<Widget> pages = [
     _buildDashboardTab(),
-    _buildEncryptDecryptTab(),
+    // _buildEncryptDecryptTab(),
+    _buildEncryptTab(),
+    _buildDecryptTab()
   ];
 
   @override
@@ -120,8 +123,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     return const Dashboard();
   }
 
-  Widget _buildEncryptDecryptTab() {
-    return const DashboardEncryptDecrypt();
+  // Widget _buildEncryptDecryptTab() {
+  //   return const DashboardEncryptDecrypt();
+  // }
+  Widget _buildEncryptTab() {
+    return EncryptionView();
+  }
+  Widget _buildDecryptTab() {
+    return DecryptionView();
   }
 
   Widget _buildBottomNavigationBar() {
@@ -143,7 +152,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 buildNavItem(0, Icons.dashboard, 'DASHBOARD'),
-                buildNavItem(1, Icons.lock, 'CRYPTO'),
+                buildNavItem(1, Icons.lock, 'Encrypt'),
+                buildNavItem(2, Icons.lock_open, 'Decrypt'),
               ],
             ),
           );
@@ -161,7 +171,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? terminalWhite : terminalBlack,
           borderRadius: BorderRadius.circular(4),
@@ -178,7 +189,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           ] : null,
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,

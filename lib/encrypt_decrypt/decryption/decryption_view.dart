@@ -1,35 +1,46 @@
 import 'package:flutter/material.dart';
+import '../../utils/common_functions.dart';
 import '../../utils/screen_layout.dart';
 import '../encryption_decryption/encryption_decryption_options_controller.dart';
 import 'package:get/get.dart';
 
-class DecryptionView extends StatelessWidget{
+class DecryptionView extends StatelessWidget {
   DecryptionView({super.key});
-  final EncryptionDecryptionOptionsController methodsController = Get.find();
+
+  final EncryptionDecryptionOptionsController edOptionsController = Get.put(EncryptionDecryptionOptionsController());
   final titleText = "Enter Text to decrypt";
   @override
   Widget build(BuildContext context) {
-    return screenLayout(context, child: Column(
+    return screenLayout(
+      context,
+      child: Column(
         children: [
           const SizedBox(height: 10),
 
           // INPUT CARD
-          buildTerminalPanel(isEncrypt: false,title: "Decrypt" ),
-          // buildInputCard(decryptionController, context, titleText,methodsController, false),
+          buildTerminalPanel(
+              isEncrypt: false,
+              title: "Decrypt",
+              icon: Icons.arrow_forward_ios_rounded,
+              readOnly: false,
+              suffixIcon: buildMobilePasteButton(
+                onChange: edOptionsController.onChange,
+                isEncrypt: true,
+              )),
 
-          // const SizedBox(height: 20),
+          const SizedBox(height: 5),
 
           // METHODS CARD
-          // buildMethodsCard(methodsController, decryptionController),
+          buildMethodsCard(isEncrypt: false),
 
-          // const SizedBox(height: 20),
-          // buildHorizontalAddCard(decryptionController, methodsController),
+          const SizedBox(height: 20),
+          buildHorizontalAddCard(),
 
           const SizedBox(height: 20),
 
           // OUTPUT CARD
-          // buildHorizontalOutputCard(decryptionController, context, methodsController, false),
-          buildTerminalPanel(isEncrypt: true, readOnly: true, title: "Plain"),
+
+          buildTerminalPanel(isEncrypt: true, readOnly: true, title: "Plain",icon: Icons.arrow_forward_ios_rounded),
 
           const SizedBox(height: 20),
 
@@ -39,7 +50,6 @@ class DecryptionView extends StatelessWidget{
           const SizedBox(height: 32),
         ],
       ),
-
     );
   }
 }
