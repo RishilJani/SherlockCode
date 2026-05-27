@@ -8,10 +8,11 @@ class EncryptionController extends GetxController {
 
   String? encryptUsing({required EncryptionDecryptionModel method, String? encrypt}) {
     if (encrypt != null) {
-      String ans =method.encrypt(plainText: encrypt);
+      String ans = method.encrypt(plainText: encrypt);
       return ans;
     } else {
-      cipherTextController.text = method.encrypt(plainText: plainTextController.text);
+      cipherTextController.text =
+          method.encrypt(plainText: plainTextController.text);
       return null;
     }
   }

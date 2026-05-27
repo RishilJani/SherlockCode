@@ -4,13 +4,13 @@ import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import '../../utils/string_constants.dart';
 
 abstract class EncryptionDecryptionModel {
-  String? title;
+  String title;
   String? description;
   bool requiresKey;
   TextEditingController? keyController;
 
   EncryptionDecryptionModel(
-      {this.title,
+      {required this.title,
       this.description,
       this.requiresKey = false,
       this.keyController = null});
@@ -25,8 +25,7 @@ class CeaseCipher extends EncryptionDecryptionModel {
       : super(
             title: EN_CEASER_CIPHER,
             description: CEASER_CIPHER_DESC,
-            requiresKey: true,
-            keyController: new TextEditingController(text: "3"));
+            requiresKey: true,);
 
   @override
   String encrypt({required String plainText, int? optionalKey}) {

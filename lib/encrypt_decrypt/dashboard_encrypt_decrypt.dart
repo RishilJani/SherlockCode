@@ -1,11 +1,10 @@
-
-// ignore: must_be_immutable
 import 'package:flutter/material.dart';
-
 import '../utils/colors.dart';
 import '../utils/common_functions.dart';
 import 'decryption/decryption_view.dart';
 import 'encryption/encryption_view.dart';
+import 'package:get/get.dart';
+import 'encryption_decryption/encryption_decryption_options_controller.dart';
 
 class DashboardEncryptDecrypt extends StatefulWidget {
   const DashboardEncryptDecrypt({super.key});
@@ -17,6 +16,8 @@ class DashboardEncryptDecrypt extends StatefulWidget {
 class _DashboardEncryptDecryptState extends State<DashboardEncryptDecrypt>
     with TickerProviderStateMixin {
   late TabController _tabController;
+
+  final EncryptionDecryptionOptionsController edOptionsController = Get.put(EncryptionDecryptionOptionsController());
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _DashboardEncryptDecryptState extends State<DashboardEncryptDecrypt>
         backgroundColor: terminalBlack,
         appBar: buildEnhancedAppBar(
           title: 'CRYPTOGRAPHY',
-          content: 'TERMINAL_PROTOCOLS_V1.0',
+          content: 'TERMINAL_PROTOCOLS',
           bottom: _buildEnhancedTabBar()
         ),
         body: Container(

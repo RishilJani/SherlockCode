@@ -2,13 +2,9 @@ import 'package:cipher_decoder/utils/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../encoding_decoding/decode/decode_controller.dart';
-import '../encoding_decoding/encode/encode_controller.dart';
-import '../encoding_decoding/encode_decode/encode_decode_model.dart';
-import '../encoding_decoding/encode_decode/encode_decode_model.dart';
-import '../encoding_decoding/encode_decode/encode_decode_option_controller.dart';
 import '../encrypt_decrypt/decryption/decryption_controller.dart';
 import '../encrypt_decrypt/encryption/encryption_controller.dart';
+import '../encrypt_decrypt/encryption_decryption/encryption_decryption_controller.dart';
 import '../encrypt_decrypt/encryption_decryption/encryption_decryption_model.dart';
 import '../encrypt_decrypt/encryption_decryption/encryption_decryption_options_controller.dart';
 import 'colors.dart';
@@ -24,7 +20,6 @@ Widget myInputfield(
     minLines,
     maxLines,
     keyboardType,
-    textInputAction,
     inputFormatters,
     onChanged,
     validator,
@@ -135,7 +130,6 @@ Widget myInputfield(
           minLines: minLines,
           maxLines: maxLines,
           keyboardType: keyboardType,
-          textInputAction: textInputAction,
           onChanged: onChanged,
           validator: validator,
           inputFormatters: inputFormatters,
@@ -145,11 +139,54 @@ Widget myInputfield(
   );
 }
 
+Widget customTextFormField(
+    {required TextEditingController controller,
+      onChange,
+      validator,
+      bool readOnly = false,
+      String? hintText,
+      int minLines = 3,
+      int maxLines = 6,
+      TextInputType? keyboardType,
+      List<TextInputFormatter>? inputFormatters}) {
+  return Container(
+    decoration: const BoxDecoration(
+      color: terminalBlack,
+    ),
+    child: TextFormField(
+      readOnly: readOnly,
+      controller: controller,
+      minLines: minLines,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      onChanged: onChange,
+      validator: validator,
+      inputFormatters: inputFormatters,
+      decoration: InputDecoration(
+        hintText: hintText?.toUpperCase(),
+        hintStyle: const TextStyle(
+          color: terminalMidGrey,
+          fontFamily: 'monospace',
+          fontSize: 12,
+        ),
+        filled: true,
+        fillColor: terminalBlack,
+        contentPadding: const EdgeInsets.all(10),
+      ),
+      style: const TextStyle(
+        color: terminalWhite,
+        fontFamily: 'monospace',
+        fontSize: 14,
+        height: 1.4,
+        letterSpacing: 0.5,
+      ),
+    ),
+  );
+}
+
+
 // region Descriptions
 Widget description({required context, controller}) {
-  if (controller is EncodeController || controller is DecodeController) {
-    return const SizedBox.shrink();
-  }
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
     child: Column(
@@ -193,23 +230,13 @@ Widget _getDescriptionList({controller, context}) {
       String description = "";
       bool isCame = false;
 
-      if (controller is EncodeDecodeOptionController) {
-        txt1 = controller.selectedMethod.value.title!.toUpperCase();
-        if (temp.contains(txt1))
-          isCame = true;
-        else {
-          temp.add(txt1);
-          description = controller.selectedMethod.value.description!;
-        }
-      } else {
-        String name = controller.options[index].title!.toUpperCase();
-        txt1 = '${index + 1}. $name';
-        if (temp.contains(name))
-          isCame = true;
-        else {
-          temp.add(name);
-          description = controller.options[index].description!;
-        }
+      String name = controller.options[index].title!.toUpperCase();
+      txt1 = '${index + 1}. $name';
+      if (temp.contains(name))
+        isCame = true;
+      else {
+        temp.add(name);
+        description = controller.options[index].description!;
       }
 
       return Visibility(
@@ -384,32 +411,27 @@ void showSnackBar({title, message, backgroundColor, colorText}) {
 
 // rest of the helpers remain essentially the same but with monospace defaults from theme
 bool checkAllTypes({controller}) =>
-    controller is EncryptionController ||
-    controller is DecryptionController ||
-    controller is EncodeController ||
-    controller is DecodeController;
+    controller is EncryptionController || controller is DecryptionController;
 
 void pasteText({controller, required Function onChange}) async {
   ClipboardData? data = await Clipboard.getData('text/plain');
   if (data != null) {
-    if (controller is EncodeController || controller is EncryptionController)
+    if (controller is EncryptionController)
       controller.plainTextController.text = data.text!;
-    else if (controller is DecodeController ||
-        controller is DecryptionController)
+    else if (controller is DecryptionController)
       controller.cipherTextController.text = data.text!;
     onChange(controller: controller);
   }
 }
 
-String dynamicDescription({controller, String text1 = '', String text2 = ''}) {
+String dynamicDescription(
+    {controller, String? text1 = '', String? text2 = ''}) {
   if (controller is EncryptionController) {
     text1 ??= controller.plainTextController.text;
     text2 ??= controller.cipherTextController.text;
   } else if (controller is DecryptionController) {
     text1 ??= controller.cipherTextController.text;
     text2 ??= controller.plainTextController.text;
-  } else if (controller is DecodeController || controller is EncodeController) {
-    return '';
   } else {
     throw ControllerTypeException(
         message: "Controller is Not right ::: ${controller.runtimeType}");
@@ -440,26 +462,15 @@ String dynamicDescription({controller, String text1 = '', String text2 = ''}) {
   return ans;
 }
 
-dynamic getMethod({required element}) {
-  if (element is EncryptionDecryptionTypes) {
+dynamic getMethodObject({required EncryptionDecryptionTypes element}) {
     if (element == EncryptionDecryptionTypes.CeaseCipher) {
-      return new CeaseCipher();
+      return EncryptionDecryptionController(model: new CeaseCipher());
     } else if (element == EncryptionDecryptionTypes.Atbash_Cipher) {
-      return new AtbashCipher();
+      return EncryptionDecryptionController(model: new AtbashCipher());
     } else if (element == EncryptionDecryptionTypes.Rail_Fence_Cipher) {
-      return new RailFenceCipher();
+      return EncryptionDecryptionController(model: new RailFenceCipher());
     } else if (element == EncryptionDecryptionTypes.Play_Fair_Cipher) {
-      return new PlayFairCipher();
+      return EncryptionDecryptionController(model: new PlayFairCipher());
     }
-  } else if (element is EncodeDecodeTypes) {
-    if (element == EncodeDecodeTypes.Base64) {
-      return Base64();
-    }
-    if (element == EncodeDecodeTypes.Base32) {
-      return Base32();
-    }
-  } else {
-    throw ControllerTypeException(
-        message: "encrypt decrypt element is not right ${element.runtimeType}");
-  }
+
 }

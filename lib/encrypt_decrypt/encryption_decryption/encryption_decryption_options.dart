@@ -6,156 +6,125 @@ import 'package:get/get.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_functions.dart';
 import '../../utils/string_constants.dart';
-import '../encryption/encryption_controller.dart';
+import 'encryption_decryption_controller.dart';
 
-// ignore:must_be_immutable
-class EncryptionDecryptionOptions extends StatefulWidget {
+class EncryptionDecryptionOptions extends StatelessWidget {
   EncryptionDecryptionOptions(
       {super.key,
       required this.controller,
       this.index,
-      required this.encryptionDecryptionOptionController}) {
-    txt =
-        'PROTOCOL_${controller is EncryptionController ? 'ENCRYPT' : 'DECRYPT'}';
-  }
+      required this.edOptionController,
+      this.isEncrypt = true});
 
   final dynamic controller;
-  int? index;
-  EncryptionDecryptionOptionsController encryptionDecryptionOptionController;
-  String txt = '';
-
-  @override
-  State<EncryptionDecryptionOptions> createState() =>
-      _EncryptionDecryptionOptionsState();
-}
-
-class _EncryptionDecryptionOptionsState
-    extends State<EncryptionDecryptionOptions>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _glowController;
-  late Animation<double> _glowAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _glowController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    )..repeat(reverse: true);
-    _glowAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
-    );
-  }
+  final int? index;
+  final bool isEncrypt;
+  late final EncryptionDecryptionOptionsController edOptionController;
 
   @override
   Widget build(BuildContext context) {
-    int n = widget.encryptionDecryptionOptionController.options.length;
+    int n = edOptionController.options.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: terminalWhite,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                child: Text(
-                  '${n > 1 ? '${widget.index! + 1}. ' : ''}${widget.txt.toUpperCase()}',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    color: terminalBlack,
-                    fontFamily: 'monospace',
-                    letterSpacing: 1.5,
+        Container(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Row(
+            children: [
+              // for title
+              Expanded(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: terminalWhite,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(
+                    '${n > 1 ? '${index! + 1}. ' : ''}Protocol',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: terminalBlack,
+                      fontFamily: 'monospace',
+                      letterSpacing: 1.5,
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (n > 1) const SizedBox(width: 8),
-            if (n > 1)
-              _customActionIcon(
-                icon: Icons.delete_outline,
-                color: terminalError,
-                onTap: () => widget.encryptionDecryptionOptionController
-                    .removeWidget(
-                        index: widget.index, controller: widget.controller),
-              ),
-          ],
+              if (n > 1) const SizedBox(width: 8),
+              if (n > 1) // for delete button
+                _customActionIcon(
+                  icon: Icons.delete_outline,
+                  color: terminalError,
+                  onTap: () => edOptionController.removeWidget(
+                      index: index, controller: controller),
+                ),
+            ],
+          ),
         ),
 
-        const SizedBox(height: 12.0),
+        const SizedBox(height: 10),
 
         // Terminal Method Selector Button
-        AnimatedBuilder(
-          animation: _glowAnimation,
-          builder: (context, child) {
-            return GestureDetector(
-              onTap: () => _showMethodDialog(),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: terminalBlack,
-                  border: Border.all(
-                    color: terminalWhite,
-                    width: 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: terminalWhite.withValues(
-                          alpha: _glowAnimation.value * 0.3),
-                      blurRadius: 10,
-                      spreadRadius: 1,
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Obx(() => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          widget.encryptionDecryptionOptionController
-                              .options[widget.index!].title!
-                              .toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                            color: terminalWhite,
-                            fontFamily: 'monospace',
-                            letterSpacing: 2,
-                          ),
-                        ),
-                        const Icon(Icons.code, color: terminalWhite, size: 18),
-                      ],
-                    )),
+        GestureDetector(
+          onTap: () => _showMethodDialog(),
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: terminalBlack,
+              border: Border.all(
+                color: terminalWhite,
+                width: 1,
               ),
-            );
-          },
+              boxShadow: [
+                BoxShadow(
+                  color: terminalWhite,
+                  blurRadius: 10,
+                  spreadRadius: 1,
+                )
+              ],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      edOptionController.options[index!].model.title
+                          .toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: terminalWhite,
+                        fontFamily: 'monospace',
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const Icon(Icons.code, color: terminalWhite, size: 18),
+                  ],
+                )),
+          ),
         ),
 
         Obx(() {
-          EncryptionDecryptionModel obj = widget
-              .encryptionDecryptionOptionController.options[widget.index!];
+          EncryptionDecryptionController obj =
+              edOptionController.options[index!];
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: obj.requiresKey
+            child: obj.model.requiresKey
                 ? Container(
-                    margin: const EdgeInsets.only(top: 16),
+                    margin:
+                        const EdgeInsets.only(left: 20, bottom: 10, right: 20),
                     child: myInputfield(
                       key: Key("key"),
                       context: context,
                       textTitle: "KEY_INPUT:",
                       hintText: "ENTER_KEY",
-                      controller: obj.keyController!,
-                      onChanged: (value) => widget
-                          .encryptionDecryptionOptionController
-                          .keyUpdateWidget(
-                              index: widget.index,
-                              controller: widget.controller),
+                      controller: obj.model.keyController!,
+                      onChanged: (value) => edOptionController.onChange(
+                          controller: controller, isEncrypt: isEncrypt),
                       inputFormatters: [
                         obj is! PlayFairCipher
                             ? FilteringTextInputFormatter.allow(
@@ -168,7 +137,7 @@ class _EncryptionDecryptionOptionsState
                 : const SizedBox.shrink(),
           );
         }),
-        const SizedBox(height: 12),
+        const SizedBox(height: 5),
       ],
     );
   }
@@ -227,20 +196,18 @@ class _EncryptionDecryptionOptionsState
                   mainAxisSpacing: 12,
                   childAspectRatio: 5,
                   children: encryptionDecryptionMethods.map((method) {
-                    EncryptionDecryptionModel model =
-                        getMethod(element: method);
-                    bool isSelected = widget
-                            .encryptionDecryptionOptionController
-                            .options[widget.index!]
-                            .title ==
-                        model.title;
+                    EncryptionDecryptionController cont =
+                        getMethodObject(element: method);
+                    bool isSelected =
+                        edOptionController.options[index!].model.title ==
+                            cont.model.title;
                     return InkWell(
                       onTap: () {
-                        widget.encryptionDecryptionOptionController
-                            .updateWidget(
-                                methodObj: model,
-                                index: widget.index,
-                                controller: widget.controller);
+                        edOptionController.updateWidget(
+                            methodController: cont,
+                            index: index,
+                            controller: controller,
+                            isEncrypt: isEncrypt);
                         Get.back();
                       },
                       child: Container(
@@ -254,7 +221,7 @@ class _EncryptionDecryptionOptionsState
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              model.title!.toUpperCase(),
+                              cont.model.title.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w900,
@@ -284,11 +251,5 @@ class _EncryptionDecryptionOptionsState
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _glowController.dispose();
-    super.dispose();
   }
 }
