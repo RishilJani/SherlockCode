@@ -8,6 +8,8 @@ class EncryptionDecryptionController {
   EncryptionDecryptionController({required this.model}) {
     if (model is CeaseCipher) {
       model.keyController = TextEditingController(text: '3');
+    } else if(model is RailFenceCipher){
+      model.keyController = TextEditingController(text: '1');
     } else {
       model.keyController = TextEditingController();
     }

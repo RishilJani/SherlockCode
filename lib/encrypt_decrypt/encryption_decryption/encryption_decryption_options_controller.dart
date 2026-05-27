@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_functions.dart';
-import '../../utils/custom_exceptions.dart';
-import '../decryption/decryption_controller.dart';
-import '../encryption/encryption_controller.dart';
 import 'encryption_decryption_model.dart';
 
 class EncryptionDecryptionOptionsController extends GetxController {
@@ -15,12 +12,11 @@ class EncryptionDecryptionOptionsController extends GetxController {
   Rx<TextEditingController> plainTextController = TextEditingController().obs;
   Rx<TextEditingController> cipherTextController = TextEditingController().obs;
 
-  void addWidget({required controller}) {
-    EncryptionDecryptionController methodObj =
-        EncryptionDecryptionController(model: CeaseCipher());
+  void addWidget({bool isEncrypt = true}) {
+    EncryptionDecryptionController methodObj = EncryptionDecryptionController(model: CeaseCipher());
     if (options.length < maxLimit) {
       options.add(methodObj);
-      onChange(controller: controller);
+      onChange(isEncrypt: isEncrypt);
     } else {
       showSnackBar(
           title: "Max Limit Reached",
@@ -31,14 +27,14 @@ class EncryptionDecryptionOptionsController extends GetxController {
   }
 
   // on method change
-  void updateWidget({required EncryptionDecryptionController methodController, index, controller, isEncrypt}) {
+  void updateWidget({required EncryptionDecryptionController methodController, index, isEncrypt}) {
     options[index] = methodController;
-    onChange(controller: controller, isEncrypt: isEncrypt);
+    onChange(isEncrypt: isEncrypt);
     update([options]);
   }
 
   // on change plaint text / cipher text
-  void onChange({controller, bool isEncrypt = true}) {
+  void onChange({ bool isEncrypt = true}) {
     if (isEncrypt) {
       String ans = plainTextController.value.text.toString();
       for (var met in options) {
@@ -52,22 +48,21 @@ class EncryptionDecryptionOptionsController extends GetxController {
       }
       plainTextController.value.text = ans;
     }
-    changeDescription(controller: controller);
+    // changeDescription(controller: controller);
     update([String]);
   }
 
   // to change description according to methods
-  void changeDescription({controller}) {
-    if (controller is EncryptionController) {
-      desc.value = dynamicDescription(controller: controller);
-    } else if (controller is DecryptionController) {
-      desc.value = dynamicDescription(controller: controller);
-    } else {
-      throw ControllerTypeException(
-          message:
-              "Encryption Decryption Controller is Not right ::: ${controller.runtimeType}");
-    }
-  }
+  // void changeDescription({controller}) {
+  //   if (controller is EncryptionController) {
+  //     desc.value = dynamicDescription(controller: controller);
+  //   } else if (controller is DecryptionController) {
+  //     desc.value = dynamicDescription(controller: controller);
+  //   } else {
+  //     throw ControllerTypeException(
+  //         message: "Encryption Decryption Controller is Not right ::: ${controller.runtimeType}");
+  //   }
+  // }
 
   // void keyUpdateWidget({required index, controller}) {
   //   if (controller is EncryptionController) {
@@ -81,7 +76,7 @@ class EncryptionDecryptionOptionsController extends GetxController {
 
   void removeWidget({index, controller, bool isEncrypt = true}) {
     options.removeAt(index);
-    onChange(controller: controller, isEncrypt: isEncrypt);
+    onChange(isEncrypt: isEncrypt);
   }
 
   //

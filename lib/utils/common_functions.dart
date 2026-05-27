@@ -148,7 +148,8 @@ Widget customTextFormField(
       int minLines = 3,
       int maxLines = 6,
       TextInputType? keyboardType,
-      List<TextInputFormatter>? inputFormatters}) {
+      List<TextInputFormatter>? inputFormatters,
+      suffixIcon}) {
   return Container(
     decoration: const BoxDecoration(
       color: terminalBlack,
@@ -172,6 +173,7 @@ Widget customTextFormField(
         filled: true,
         fillColor: terminalBlack,
         contentPadding: const EdgeInsets.all(10),
+        suffixIcon: suffixIcon
       ),
       style: const TextStyle(
         color: terminalWhite,
@@ -357,11 +359,11 @@ Widget enhancedClearIconButton(
       });
 }
 
-Widget buildMobilePasteButton({controller, onChange}) {
+Widget buildMobilePasteButton({onChange, isEncrypt}) {
   return _customIconButton(
       IconData: Icons.paste,
       onTap: () {
-        pasteText(controller: controller, onChange: onChange);
+        pasteText( onChange: onChange, isEncrypt: isEncrypt);
       });
 }
 
@@ -409,18 +411,17 @@ void showSnackBar({title, message, backgroundColor, colorText}) {
   );
 }
 
-// rest of the helpers remain essentially the same but with monospace defaults from theme
-bool checkAllTypes({controller}) =>
-    controller is EncryptionController || controller is DecryptionController;
-
-void pasteText({controller, required Function onChange}) async {
+void pasteText({ required Function onChange,isEncrypt}) async {
   ClipboardData? data = await Clipboard.getData('text/plain');
+  EncryptionDecryptionOptionsController edOptionsController = Get.find();
+
   if (data != null) {
-    if (controller is EncryptionController)
-      controller.plainTextController.text = data.text!;
-    else if (controller is DecryptionController)
-      controller.cipherTextController.text = data.text!;
-    onChange(controller: controller);
+    if (isEncrypt) {
+      edOptionsController.plainTextController.value.text = data.text!;
+    }else {
+      edOptionsController.cipherTextController.value.text = data.text!;
+    }
+    onChange(isEncrypt : isEncrypt);
   }
 }
 

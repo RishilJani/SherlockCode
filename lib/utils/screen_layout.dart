@@ -64,8 +64,8 @@ Widget screenLayout(context, {required Widget child}) {
 //       );
 // }
 
-Widget buildMethodsCard(
-    EncryptionDecryptionOptionsController methodsController, controller) {
+Widget buildMethodsCard({bool isEncrypt = true}) {
+  EncryptionDecryptionOptionsController edOptionsController = Get.find();
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 8),
     decoration: BoxDecoration(
@@ -82,7 +82,7 @@ Widget buildMethodsCard(
           return ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: methodsController.options.length,
+            itemCount: edOptionsController.options.length,
             itemBuilder: (context, index) {
               return Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
@@ -90,10 +90,9 @@ Widget buildMethodsCard(
                 decoration: BoxDecoration(
                   border: Border.all(color: terminalWhite, width: 0.5),
                 ),
-                child: EncryptionDecryptionOptions(
-                  controller: controller,
-                  edOptionController: methodsController,
+                child: ED_OptionsView(
                   index: index,
+                  isEncrypt: isEncrypt,
                 ),
               );
             },
@@ -112,9 +111,10 @@ Widget buildMethodsCard(
   // );
 }
 
-Widget buildHorizontalAddCard(controller, methodsController) {
+Widget buildHorizontalAddCard() {
+  EncryptionDecryptionOptionsController edOptionsController = Get.find();
   return InkWell(
-    onTap: () => methodsController.addWidget(controller: controller),
+    onTap: () => edOptionsController.addWidget(),
     child: Container(
       height: 48,
       decoration: BoxDecoration(
@@ -214,7 +214,8 @@ Widget buildTerminalPanel(
     {String? title,
     IconData? icon,
     bool isEncrypt = true,
-    bool readOnly = false}) {
+    bool readOnly = false,
+    suffixIcon}) {
   EncryptionDecryptionOptionsController edOptionsController = Get.find();
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 8),
@@ -260,7 +261,9 @@ Widget buildTerminalPanel(
             keyboardType: TextInputType.multiline,
             onChange: (String value) =>
                 edOptionsController.onChange(isEncrypt: isEncrypt),
-            readOnly: readOnly),
+            readOnly: readOnly,
+          suffixIcon: suffixIcon
+        ),
       ],
     ),
   );
